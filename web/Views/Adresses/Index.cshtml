@@ -39,7 +39,7 @@
                 @if(adr.DateStart != null && adr.DateEnd != null) {
                     <text>
                     <span>Du @adr.DateStart.Value.ToString("d")</span>
-                    <span>au @adr.DateEnd.Value.ToString("d")</span>
+                    <span>au @adr.DateEnd.Value.AddDays(-1).ToString("d")</span>
                     </text>
                 } else if(adr.DateStart != null) {
                     <text>
@@ -47,7 +47,7 @@
                     </text>
                 } else if(adr.DateEnd != null) {
                     <text>
-                    <span>Jusqu'au @adr.DateEnd.Value.ToString("d")</span>
+                    <span>Jusqu'au @adr.DateEnd.Value.AddDays(-1).ToString("d")</span>
                     </text> 
                 }
             </td>
