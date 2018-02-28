@@ -300,69 +300,279 @@
     <div class="clearfix"></div>
 
     <div class="fullpage">
-        <div style="margin-top: 0.8cm">
-            <h2>Détail des pointages kilométriques par jour</h2>
+        <div style="display:inline-block;width:100%">
+            <div style="float:left">
+                <span class="adresse_nom">Les Restaurants du C&oelig;ur</span>
+            </div>
+            <div style="float:right">
+                <span>Année : <strong>@Model.PeriodStart.Year</strong></span>
+            </div>
         </div>
-        <table class="table table_details table-bordered">
-            <thead>
-                <tr>
-                    <th></th>
-                @for(var dateMonth = Model.PeriodStart; dateMonth < Model.PeriodEnd; dateMonth = dateMonth.AddMonths(1))
-                {
-                    <th>@dateMonth.ToString("MMMM")</th>
-                }
-                </tr>
-            </thead>
-            <tbody>
-                @{ var totalByMonth = new Dictionary<int, decimal>(); }
-                @for (var day = 1; day <= 31; day++)
-                {
-                <tr>
-                    <th>@day</th>
-                    @for(var dateMonth = Model.PeriodStart; dateMonth < Model.PeriodEnd; dateMonth = dateMonth.AddMonths(1))
+        <div class="clearfix"></div>
+        <div style="display:inline-block;width:100%">
+            <div style="float:left">
+                <span class="adresse_rue">@Model.Adresse.Centre.Siege.Adresse</span>
+            </div>
+            <div style="float:right">
+                <span>Durée : <strong>@Model.MonthCount mois</strong></span>
+            </div>
+        </div>
+        <div style="display:inline-block;width:100%">
+            <div style="float:right">
+                <span>Période : </span>
+                <span><strong>@Model.PeriodStart.ToString("dd MMMM")</strong> au <strong>@Model.PeriodEnd.ToString("dd MMMM yyyy")</strong></span>
+            </div>
+        </div>
+        <div style="display:inline-block;width:100%">
+            <div style="float:left">
+                <span><em>Nom : </em> <strong>@Model.Benevole.Nom</strong></span>
+            </div>
+        </div>
+        <div style="display:inline-block;width:100%">
+            <div style="float:left">
+                <span><em>Prénom : </em> <strong>@Model.Benevole.Nom</strong></span>
+            </div>
+        </div>
+        <div style="display:inline-block;width:100%">
+            <div style="float:left">
+                <span><em>Adresse : </em> <strong>@Model.Adresse.AdresseLigne1 @Model.Adresse.AdresseLigne2 @Model.Adresse.AdresseLigne3</strong></span>
+            </div>
+        </div>
+        <div style="display:inline-block;width:100%">
+            <div style="float:left">
+                <span><em>Code postal : </em> <strong>@Model.Adresse.CodePostal</strong></span>
+            </div>
+            <div style="float:left;margin-left:2cm">
+                <span><em>Ville : </em> <strong>@Model.Adresse.Ville</strong></span>
+            </div>
+        </div>
+        <div style="display:inline-block;width:100%">
+            <div style="float:left">
+                <span><em>Téléphone : </em> <strong>@Model.Benevole.Telephone</strong></span>
+            </div>
+            <div style="float:right">
+                <span><em>Distance A/R domicile - lieu de bénévolat : </em> <strong>@Model.Adresse.DistanceCentre.ToString("0.#") km</strong></span>
+            </div>
+        </div>
+        <div style="display:inline-block;width:100%;margin-top:5mm">
+            <div style="float:left">
+                <span><em>Lieu du bénévolat : </em> <strong>@Model.Adresse.Centre.Nom</strong> - </span>
+                <span>@Model.Adresse.Centre.Adresse</span>
+            </div>
+        </div>
+
+        @{ var totalByMonth = new Dictionary<int, decimal>(); }
+        
+        <div style="display:block;margin-top:2mm">
+            <table class="table_details">
+                <thead>
+                    <tr>
+                        <th class="table_separator"></th>
+                        <th colspan="7" class="table_separator">1ère semaine</th>
+                        <th colspan="7" class="table_separator">2ème semaine</th>
+                        <th colspan="7" class="table_separator">3ème semaine</th>
+                    </tr>
+                    <tr>
+                        <th class="table_separator"></th>
+                        @for (int i = 0; i < 3; i++)
+                        {
+                        <th>Lu</th>
+                        <th>Ma</th>
+                        <th>Me</th>
+                        <th>Je</th>
+                        <th>Ve</th>
+                        <th>Sa</th>
+                        <th class="table_separator">Di</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @for (var month = 1; month <= 12; month++)
                     {
-                        <td>
+                        <tr>
+                            <th class="month_name">@(new DateTime(Model.PeriodStart.Year, month, 1).ToString("MMMM"))</th>
+
                             @{
-                                decimal? value = null;
-                                dal.models.Pointage pt;
-                                if(Model.DetailDemiJournees.TryGetValue(Tuple.Create(dateMonth.Month, day), out pt)) {
-                                    value = (decimal)pt.NbDemiJournees * Model.Adresse.DistanceCentre;
-                                    if(!totalByMonth.ContainsKey(dateMonth.Month))
+                            var firstDate = new DateTime(Model.PeriodStart.Year, month, 1);
+                            var firstDayOfWeek = (firstDate.DayOfWeek == DayOfWeek.Sunday) ? 7 : (int)firstDate.DayOfWeek;
+                            var firstDateMonday = firstDate.AddDays(1 - firstDayOfWeek);
+                            }
+
+                            @for (var dayIndex = 0; dayIndex < 21; dayIndex++)
+                            {
+                                var selectedDate = firstDateMonday.AddDays(dayIndex);
+                                string tdclass = "";
+                                string tdValue = "";
+
+                                if (selectedDate.Month == month)
+                                {
+                                    tdclass = "day_in_month";
+
+                                    int? value = null;
+                                    dal.models.Pointage pt;
+                                    if (Model.DetailDemiJournees.TryGetValue(Tuple.Create(selectedDate.Month, selectedDate.Day), out pt))
                                     {
-                                        totalByMonth[dateMonth.Month] = value.Value;
-                                    }
-                                    else
-                                    {
-                                        totalByMonth[dateMonth.Month] += value.Value;
+                                        value = pt.NbDemiJournees;
+                                        tdValue = value.ToString();
+
+                                        if (!totalByMonth.ContainsKey(selectedDate.Month))
+                                        {
+                                            totalByMonth[selectedDate.Month] = value.Value;
+                                        }
+                                        else
+                                        {
+                                            totalByMonth[selectedDate.Month] += value.Value;
+                                        }
                                     }
                                 }
-                            }
-                            
-                            @if(@value != null) 
-                            {
-                                <span>@value.Value.ToString("#0.#")</span>
-                            }
-                        </td>
-                    }
-                </tr>
+
+                            <td class="@tdclass">@tdValue</td>
+                        }
+                        </tr>
                 }
-                <tr>
-                    <th>Total</th>
-                    @for (var dateMonth = Model.PeriodStart; dateMonth < Model.PeriodEnd; dateMonth = dateMonth.AddMonths(1))
+                </tbody>
+            </table>
+            <table class="table_details" style="margin-top:2mm">
+                <thead>
+                    <tr>
+                        <th class="table_separator"></th>
+                        <th colspan="7" class="table_separator">4ème semaine</th>
+                        <th colspan="7" class="table_separator">5ème semaine</th>
+                        <th colspan="3" class="table_separator">6ème semaine</th>
+                        <th colspan="2"></th>
+                        <th colspan="2"></th>
+                    </tr>
+                    <tr>
+                        <th class="table_separator"></th>
+                    @for (int i = 0; i < 3; i++)
                     {
-                        if (totalByMonth.ContainsKey(dateMonth.Month))
+                        <th>Lu</th>
+                        <th>Ma</th>
+                        @if(i < 2)
                         {
-                            <td><strong>@totalByMonth[dateMonth.Month].ToString("#0.#")</strong></td>
+                        <th>Me</th>
+                        <th>Je</th>
+                        <th>Ve</th>
+                        <th>Sa</th>
+                        <th class="table_separator">Di</th>
                         }
                         else
                         {
-                            <td><strong>0</strong></td>
+                        <th class="table_separator">Me</th>
+                        <th class="table_separator double_size" colspan="2">Nb A/R</th>
+                        <th colspan="2" class="double_size">Dist. totale</th>
                         }
                     }
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                    </tr>
+                </thead>
+                <tbody>
+                @for (var month = 1; month <= 12; month++)
+                {
+                    <tr>
+                        <th class="month_name">@(new DateTime(Model.PeriodStart.Year, month, 1).ToString("MMMM"))</th>
 
+                        @{
+                        var firstDate = new DateTime(Model.PeriodStart.Year, month, 1);
+                        var firstDayOfWeek = (firstDate.DayOfWeek == DayOfWeek.Sunday) ? 7 : (int)firstDate.DayOfWeek;
+                        var firstDateMonday = firstDate.AddDays(1 - firstDayOfWeek);
+                        }
+
+                        @for (var dayIndex = 21; dayIndex < 38; dayIndex++)
+                        {
+                            var selectedDate = firstDateMonday.AddDays(dayIndex);
+                            string tdclass = "";
+                            string tdValue = "";
+
+                            if(dayIndex % 7 == 0)
+                            {
+                                tdclass += " table_separator";
+                            }
+
+                            if (selectedDate.Month == month)
+                            {
+                                tdclass += " day_in_month";
+
+                                int? value = null;
+                                dal.models.Pointage pt;
+                                if (Model.DetailDemiJournees.TryGetValue(Tuple.Create(selectedDate.Month, selectedDate.Day), out pt))
+                                {
+                                    value = pt.NbDemiJournees;
+                                    tdValue = value.ToString();
+
+                                    if (!totalByMonth.ContainsKey(selectedDate.Month))
+                                    {
+                                        totalByMonth[selectedDate.Month] = value.Value;
+                                    }
+                                    else
+                                    {
+                                        totalByMonth[selectedDate.Month] += value.Value;
+                                    }
+                                }
+                            }
+
+                        <td class="@tdclass">@tdValue</td>
+                        }
+
+                        <td class="table_separator" colspan="2"><strong>@(totalByMonth.ContainsKey(month) ? totalByMonth[month].ToString() : "")</strong></td>
+                        <td colspan="2"><strong>@(totalByMonth.ContainsKey(month) ? (totalByMonth[month] * Model.Adresse.DistanceCentre).ToString("0.# km") : "")</strong></td>
+
+                    </tr>
+                }
+                    <tr>
+                        <th>TOTAL</th>
+                        <td colspan="19"></td>
+                        <td colspan="2"><strong>@((totalByMonth.Sum(t => t.Value) * Model.Adresse.DistanceCentre).ToString("0.# km"))</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="float:left;margin-top:3mm;margin-left:1.5cm">
+                <table class="table_details">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Le bénévole</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="header_sign_panel">Date</th>
+                            <td class="date_name"></td>
+                        </tr>
+                        <tr>
+                            <th class="header_sign_panel">Nom</th>
+                            <td class="date_name"></td>
+                        </tr>
+                        <tr>
+                            <th class="header_sign_panel">Signature</th>
+                            <td class="signature"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="float:right;margin-top:3mm;margin-right:1.5cm">
+                <table class="table_details">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Le responsable</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="header_sign_panel">Date</th>
+                            <td class="date_name"></td>
+                        </tr>
+                        <tr>
+                            <th class="header_sign_panel">Nom</th>
+                            <td class="date_name"></td>
+                        </tr>
+                        <tr>
+                            <th class="header_sign_panel">Signature</th>
+                            <td class="signature"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
