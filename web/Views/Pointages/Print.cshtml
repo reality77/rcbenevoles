@@ -300,7 +300,9 @@
     <div class="clearfix"></div>
 
     <div class="fullpage">
-        <h2>Détail des pointages kilométriques par jour</h2>
+        <div style="margin-top: 0.8cm">
+            <h2>Détail des pointages kilométriques par jour</h2>
+        </div>
         <table class="table table_details table-bordered">
             <thead>
                 <tr>
@@ -350,7 +352,7 @@
                     {
                         if (totalByMonth.ContainsKey(dateMonth.Month))
                         {
-                            <td><strong>@totalByMonth[dateMonth.Month]</strong></td>
+                            <td><strong>@totalByMonth[dateMonth.Month].ToString("#0.#")</strong></td>
                         }
                         else
                         {

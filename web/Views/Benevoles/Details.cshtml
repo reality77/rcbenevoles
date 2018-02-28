@@ -9,6 +9,12 @@
 <h3>Détail du bénévole</h3>
 
 <div>
+    <div>
+        <a asp-action="Benevole" asp-controller="Pointages" asp-route-id="@Model.ID" class="btn btn-link"><i class="glyphicon glyphicon-calendar"></i> Gérer les pointages</a> |
+        <a asp-action="PrintIndex" asp-controller="Pointages" asp-route-id="@Model.ID" class="btn btn-link"><i class="glyphicon glyphicon-print"></i> Editer une fiche</a> | 
+        <a asp-action="Index" class="btn btn-link">Retourner à la liste</a>
+    </div>
+
     <hr />
     <div class="col-md-6">
         <div class="panel panel-default">
@@ -91,7 +97,4 @@
             </div>
         </div>
     </div>
-</div>
-<div>
-    <a asp-action="Index" class="btn btn-link">Retourner à la liste</a>
 </div>

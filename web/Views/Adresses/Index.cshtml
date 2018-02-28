@@ -21,6 +21,9 @@
                     Adresse
                 </th>
                 <th>
+                    Centre
+                </th>
+                <th>
                     Nombre de pointages
                 </th>
                 <th>
@@ -52,11 +55,14 @@
                 @Html.Raw(adr.Adresse.GetAdresseComplete(forHtml:true))
             </td>
             <td>
+                @adr.Adresse.Centre.Nom
+            </td>
+            <td>
                 <span>@adr.PointagesCount</span>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@adr.Adresse.ID"><i class="glyphicon glyphicon-edit"></i> Corriger</a> |
-                @*<a asp-action="Delete" asp-route-id="@adr.Adresse.ID"><i class="glyphicon glyphicon-trash"></i> Supprimer [A VENIR]</a>*@
+                <a asp-action="Delete" asp-route-id="@adr.Adresse.ID"><i class="glyphicon glyphicon-trash"></i> Supprimer</a>
             </td>
         </tr>
 }

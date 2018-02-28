@@ -84,5 +84,16 @@ namespace web.Controllers
                 throw;
             }
         }
+
+        [HttpGet]
+        public IActionResult AccessDenied(string ReturnUrl)
+        {
+            if(Uri.TryCreate(ReturnUrl, UriKind.Relative, out Uri uri) && !uri.IsAbsoluteUri)
+            {
+                ViewBag.ReturnUrl = ReturnUrl;
+            }
+
+            return View();
+        }
     }
 }

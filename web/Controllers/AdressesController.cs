@@ -247,6 +247,85 @@ namespace web.Controllers
             return RedirectToAction("Details", "Benevoles", new { id = existing.BenevoleID });
         }
 
+        // GET: Adresse/Delete/5
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var adresse = await _context.Adresse
+                .Include(a => a.Centre)
+                .Include(a => a.Benevole).ThenInclude(b => b.Adresses)
+                .SingleOrDefaultAsync(a => a.ID == id);
+
+            if (adresse == null)
+                return NotFound();
+
+            if (GetCurrentUser().CentreID != null && GetCurrentUser().CentreID != adresse.CentreID)
+                return Forbid();
+
+            if (adresse.Benevole.Adresses.Count() == 1)
+                return BadRequest("Vous ne pouvez pas supprimer l'unique adresse d'un bénévole");
+
+            ViewBag.NombrePointages = await _context.Pointages.CountAsync(p => p.AdresseID == id);
+
+            return View(adresse);
+        }
+
+
+        // POST: Benevoles/ChangeAddress/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirm(int id)
+        {
+            int nbPointages = 0;
+            var adresse = await _context.Adresse
+                .Include(a => a.Centre)
+                .Include(a => a.Benevole).ThenInclude(b => b.Adresses)
+                .SingleOrDefaultAsync(a => a.ID == id);
+
+            if (adresse == null)
+                return NotFound();
+
+            if (GetCurrentUser().CentreID != null && GetCurrentUser().CentreID != adresse.CentreID)
+                return Forbid();
+
+            if (adresse.Benevole.Adresses.Count() == 1)
+                return BadRequest("Vous ne pouvez pas supprimer l'unique adresse d'un bénévole");
+
+            var pointages = _context.Pointages.Where(p => p.AdresseID == id);
+
+            if (pointages.Count() > 0)
+            {
+                nbPointages = pointages.Count();
+                _context.Pointages.RemoveRange(pointages);
+            }
+
+            if(adresse.IsCurrent)
+            {
+                adresse.IsCurrent = false;
+                var newcurrent = adresse.Benevole.Adresses
+                    .OrderByDescending(a => a.DateChangement)
+                    .FirstOrDefault(a => a.ID != id);
+
+                if (newcurrent != null)
+                    newcurrent.IsCurrent = true;
+            }
+
+            _context.Adresse.Remove(adresse);
+
+            await _context.SaveChangesAsync();
+
+            if (pointages.Count() > 0)
+                LogInfo("Suppression de {NombrePointages} pointages du benevole #{BenevoleID} ({BenevolePrenom} {BenevoleNom}) sur l'adresse #{AdresseID}", nbPointages, adresse.Benevole.ID, adresse.Benevole.Prenom, adresse.Benevole.Nom, adresse.ID);
+
+            LogInfo("Adresse {AdresseID} supprimée du benevole #{BenevoleID} ({BenevolePrenom} {BenevoleNom})", adresse.ID, adresse.Benevole.ID, adresse.Benevole.Prenom, adresse.Benevole.Nom);
+            SetGlobalMessage("L'adresse a été supprimée avec succès", EGlobalMessageType.Success);
+
+            return RedirectToAction(nameof(Index), new { idBenevole = adresse.BenevoleID });
+        }
+
+
         private void SetViewBagCentres()
         {
             if (User.IsInRole("SuperAdmin"))

@@ -44,18 +44,37 @@ namespace web.Controllers
             if (filter.Term == null)
                 filter.Term = string.Empty;
 
-            if (!User.IsInRole("SuperAdmin"))
-                filter.CentreID = GetCurrentUser().CentreID;
+            bool bCurrentCentreOnly = true;
 
-            var query = _context.Benevoles.Include(b => b.Adresses).ThenInclude(a => a.Centre)
-                .Where(b => b.Adresses.Any(a => a.CentreID == filter.CentreID))
-                .Where(b => b.Nom.ToLower().StartsWith(filter.Term.Trim().ToLower()));
+            if (!User.IsInRole("SuperAdmin"))
+            {
+                filter.CentreID = GetCurrentUser().CentreID;
+                bCurrentCentreOnly = false;
+            }
+
+            var query = _context.Benevoles.Include(b => b.Adresses).ThenInclude(a => a.Centre).AsQueryable();
+
+            if (filter.CentreID > 0)
+            {
+                if(!bCurrentCentreOnly)
+                    query = query.Where(b => b.Adresses.Any(a => a.CentreID == filter.CentreID));
+                else
+                    query = query.Where(b => b.Adresses.SingleOrDefault(a => a.IsCurrent).CentreID == filter.CentreID);
+            }
+
+            if (!string.IsNullOrEmpty(filter.Term))
+                query = query.Where(b => b.Nom.ToLower().StartsWith(filter.Term.Trim().ToLower()));
+
+            query = query.OrderBy(b => b.Adresses.SingleOrDefault(a => a.IsCurrent).Centre.Nom)
+                .ThenBy(b => b.Nom)
+                .ThenBy(b => b.Prenom);
 
             var model = query.Select(b => new BenevolePointageListItemModel
             {
                 BenevoleID = b.ID,
                 BenevoleNom = b.Nom,
                 BenevolePrenom = b.Prenom,
+                BenevoleCentre = b.Adresses.SingleOrDefault(a => a.IsCurrent).Centre.Nom,
                 ShowAddressWarning = b.Adresses.Any(a => a.CentreID == filter.CentreID && a.IsCurrent)
             }).AsEnumerable();
 

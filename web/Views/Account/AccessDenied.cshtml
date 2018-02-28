@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewData["Title"] = "Accès interdit";
+}
+
+<h2>Accès non autorisé</h2>
+
+<p>
+    Vous n'avez pas le droit d'accéder à cette page
+</p>
+@if (ViewBag.ReturnUrl != null)
+{
+<p>
+    <a href="@ViewBag.ReturnUrl">Cliquez ici pour revenir à la page précédente</a>
+</p>
+}

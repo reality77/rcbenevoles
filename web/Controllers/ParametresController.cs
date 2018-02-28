@@ -9,7 +9,7 @@ using web.Models;
 
 namespace web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin")]
     public class ParametresController : RCBenevoleController
     {
         public ParametresController(RCBenevoleContext context)

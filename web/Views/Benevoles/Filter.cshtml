@@ -17,6 +17,12 @@
         <td>
             <span>@Html.DisplayFor(modelItem => item.BenevolePrenom)</span>
         </td>
+        @if (User.IsInRole("SuperAdmin"))
+        {
+        <td>
+            <span>@Html.DisplayFor(modelItem => item.BenevoleCentre)</span>
+        </td>
+        }
         <td>
             <a asp-action="Benevole" asp-controller="Pointages" asp-route-id="@item.BenevoleID"><i class="glyphicon glyphicon-calendar"></i> Gérer les pointages</a> | 
             <a asp-action="PrintIndex" asp-controller="Pointages" asp-route-id="@item.BenevoleID"><i class="glyphicon glyphicon-print"></i> Editer une fiche</a>

@@ -21,7 +21,9 @@
                                 <label class="control-label">Centre :</label>
                             </div>
                             <div class="col-sm-5">
-                                <select asp-for="CentreID" asp-items="@(new SelectList(Model.Centres, "ID", "Nom"))" class="form-control"></select>
+                                <select asp-for="CentreID" asp-items="@(new SelectList(Model.Centres, "ID", "Nom"))" class="form-control">
+                                    <option value="0">- Tous les centres -</option>
+                                </select>
                                 <span asp-validation-for="CentreID" class="text-danger"></span>
                             </div>
                         </div>
@@ -57,6 +59,10 @@
                 <tr>
                     <th>Nom</th>
                     <th>Prénom</th>
+                    @if (User.IsInRole("SuperAdmin"))
+                    {
+                        <th>Centre</th>
+                    }
                     <th>Actions</th>
                 </tr>
             </thead>

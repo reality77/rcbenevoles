@@ -3,7 +3,20 @@
     @page
     { 
         size: A4 portrait;
-        margin: 3%;
+        margin: 2%;
+    }
+
+    .fullpage {
+        page-break-after: always;
+        height: 21cm;
+        width: 29.7cm;
+    }
+
+}
+@media screen
+{
+    .fullpage {
+        float:none;
     }
 }
 
@@ -15,12 +28,6 @@ body
 
 .landscape {
     transform: rotate(-90deg);
-}
-
-.fullpage {
-    page-break-after:always;
-    height: 21cm;
-    width: 29.7cm;
 }
 
 .adresse_nom {
@@ -105,6 +112,12 @@ h1 {
     font-size:16pt;
     text-align:center;
     border:black solid 2pt;
+}
+
+h2 {
+    font-size: 14pt;
+    text-align: center;
+    border: black solid 1pt;
 }
 
 div .right {

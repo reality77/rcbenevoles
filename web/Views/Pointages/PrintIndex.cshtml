@@ -26,18 +26,18 @@ else
             if (period.Adresses.Count == 1)
             {
                 <li>
-                    <a asp-action="Print" asp-route-addressId="@period.Adresses.First().ID" asp-route-period="@period.PeriodId" asp-route-year="@period.Start.Year" target="_blank">Du @period.Start.ToString("dddd dd MMM") au @period.End.ToString("dd MMM yyyy") </a>
+                    <a asp-action="Print" asp-route-addressId="@period.Adresses.First().ID" asp-route-period="@period.PeriodId" asp-route-year="@period.Start.Year" target="_blank">Du <strong>@period.Start.ToString("dddd d MMMM")</strong> au <strong>@period.End.ToString("dddd d MMMM yyyy")</strong></a>
                 </li>
             }
             else
             {
             <li>
-                <span>Du @period.Start.ToString("dddd dd MMM") au @period.End.ToString("dddd dd MMM yyyy")</span>
+                <span>Du <strong>@period.Start.ToString("dddd d MMMM")</strong> au <strong>@period.End.ToString("dddd d MMMM yyyy")</strong></span>
                 <ul>
                 @foreach (var adresse in period.Adresses)
                 {
                     <li>
-                        <a asp-action="Print" asp-route-addressId="@adresse.ID" asp-route-period="@period.PeriodId" asp-route-year="@period.Start.Year" target="_blank">pour l'adresse @adresse.GetAdresseComplete(false)</a>
+                        à l'adresse <a asp-action="Print" asp-route-addressId="@adresse.ID" asp-route-period="@period.PeriodId" asp-route-year="@period.Start.Year" target="_blank">@adresse.GetAdresseComplete(false)</a>
                     </li>
                 }
                 </ul>
