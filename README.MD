@@ -1,43 +1,18 @@
-# Mode test
+# Gestion des bénévoles
 
-## Construction de l'image
+L'application Gestion des bénévoles permet d'effectuer des pointages pour les bénévoles de l'association Les Restaurants du Coeur par des responsables de centres afin d'editer des fiches d'abandon de remboursement des frais de déplacement servant de justificatifs à l'administration fiscale.
 
-`docker build -t rcbenevoles .`
+## Technologies employées
 
-## Execution
+L'application a été développée en C# (ASP.NET MVC Core) et Entity Framework Core.
+Le base de données utilisée est une base PostgreSQL
 
-- Avant l'éxécution, lancer le container postgresql de test (base vide)
+L'application a été optimisée afin d'être facilement packageable dans un environnement docker.
 
-`docker run -it -e POSTGRES_USER=rcbenevoles -e POSTGRES_PASSWORD=rcbenevoles -p 5432:5432 postgres`
+## Variables d'environnement
 
-- Exécution de notre container web
+APP_DB_SERVER : Nom ou adresse IP du serveur de base de données
+APP_DB_PASSWORD : Mot de passe de l'utilisateur rcbenevoles sur la base de données rcbenevoles
 
-`docker run -it -p 8080:80 -e APP_DB_SERVER=10.0.2.15 -e APP_DB_PASSWORD=rcbenevoles rcbenevoles`
-
-option `-it` pour démarrer en interactif
-option `-d`pour démarrer en détaché
-
-- Le serveur web va utiliser les variables d'environnements APP_DB_SERVER et APP_DB_PASSWORD pour déterminer le nom du serveur de base de données
-- Si la base "sample" n'existe pas, le serveur web va la créér et lancer la migration initiale (voir src/web/Startup.cs : `dbcontext.Database.EnsureCreated();`)
-
-
-## Test
-
-- http://localhost:8080/
-
-# Mode déploiement
-
-## Démarrer avec un docker swarm
-
-Pour déployer le swarm :
-
-`docker swarm init`
-
-`docker stack deploy -c docker-compose.dev.yml webstack`
-
-Attention : pour le moment, les données de la base ne sont pas persistentes
-
-Pour le quitter :
-
-`docker swarm leave --force`
-
+APP_ADMIN_PASSWORD : Mot de passe de l'administrateur du site lors de la création de celui-ci
+APP_GENERATE_DEV_DATA : Permet de générer des données de test (si valeur = 1)
