@@ -74,10 +74,8 @@ namespace web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Contact()
+        public IActionResult Legal()
         {
-            ViewData["Message"] = "TODO";
-
             return View();
         }
 

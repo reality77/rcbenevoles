@@ -66,7 +66,14 @@
         <hr />
         <footer>
             <div style="float:left">
-                <p>&copy; 2017 - David D.</p>
+                <p>&copy; 2017 - David Durain</p>
+            </div>
+            <div style="float:left;margin-left:32px">
+                <ul class="list-unstyled list-inline">
+                    <li><a href="@Url.Action("Legal")#license">Licence</a></li>
+                    <li><a href="@Url.Action("Legal")#components">Composants</a></li>
+                    <li><a href="@Url.Action("Legal")#privacy">Données personnelles</a></li>
+                </ul>
             </div>
             <div style="float:right">
                 version @(System.Reflection.Assembly.GetAssembly(typeof(web.Program)).GetName().Version.ToString())
