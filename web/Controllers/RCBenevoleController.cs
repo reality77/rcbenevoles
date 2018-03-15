@@ -13,7 +13,7 @@ namespace web.Controllers
 {
     public abstract class RCBenevoleController : Controller
     {
-        private const string LOG_PREFIX = "({COMMON_UserLogin}) [{COMMON_ControllerName}.{COMMON_ActionName}] ";
+        private const string LOG_PREFIX = "({X_UserLogin}@{X_ClientIp}) [{X_ControllerName}.{X_ActionName}] ";
 
         protected RCBenevoleContext _context;
 
@@ -44,7 +44,6 @@ namespace web.Controllers
             return IsCentreIdAllowed(benevole.CurrentAdresse.CentreID);
         }
 
-
         protected void LogDebug(string templateMessage, params object[] propertyValues)
         {
             Serilog.Log.Debug(LOG_PREFIX + templateMessage, GenerateFullPropertyValues(propertyValues));
@@ -54,7 +53,7 @@ namespace web.Controllers
         {
             Serilog.Log.Information(LOG_PREFIX + templateMessage, GenerateFullPropertyValues(propertyValues));
         }
-                
+
         protected void LogWarning(string templateMessage, params object[] propertyValues)
         {
             Serilog.Log.Warning(LOG_PREFIX + templateMessage, GenerateFullPropertyValues(propertyValues));
@@ -67,27 +66,31 @@ namespace web.Controllers
 
         private object[] GenerateFullPropertyValues(params object[] propertyValues)
         {
-            const int NB_PROPERTIES_ADDED = 3;
+            const int NB_PROPERTIES_ADDED = 4;
 
             var realProps = new object[propertyValues.Length + NB_PROPERTIES_ADDED];
 
+            int propindex = 0;
+
             // 1 - Utilisateur
             if(!User.Identity.IsAuthenticated)
-                realProps[0] = "<anonymous>";
+                realProps[propindex++] = "<anonymous>";
             else
-                realProps[0] = User.Identity.Name;
+                realProps[propindex++] = User.Identity.Name;
+
+            realProps[propindex++] = this.Request.HttpContext.Connection.RemoteIpAddress;
 
             // 2 - Controlleur/Action
             var actionDesc = this.ControllerContext?.ActionDescriptor;
             if(actionDesc == null)
             {
-                realProps[1] = "";
-                realProps[2] = "";
+                realProps[propindex++] = "";
+                realProps[propindex++] = "";
             }
             else
             {
-                realProps[1] = actionDesc.ControllerName;
-                realProps[2] = actionDesc.ActionName;
+                realProps[propindex++] = actionDesc.ControllerName;
+                realProps[propindex++] = actionDesc.ActionName;
             }
 
             propertyValues.CopyTo(realProps, NB_PROPERTIES_ADDED);
