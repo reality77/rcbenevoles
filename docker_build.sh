@@ -1,1 +1,1 @@
-docker build -t reality77/rcbenevoles:dev .
+docker build -t rcbenevoles .
