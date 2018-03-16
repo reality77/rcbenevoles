@@ -44,7 +44,7 @@ namespace web
             }
             
             if(!string.IsNullOrEmpty(fileLogPath))
-                loggerConfig = loggerConfig.WriteTo.File(fileLogPath, rollingInterval: RollingInterval.Day);
+                loggerConfig = loggerConfig.WriteTo.File(fileLogPath, rollingInterval: RollingInterval.Day, outputTemplate:"{Timestamp:o} [{Level:u4}] {Message:lj}{NewLine}{Exception}");
 
             Log.Logger = loggerConfig
                 .Enrich.FromLogContext()

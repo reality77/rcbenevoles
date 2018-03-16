@@ -12,6 +12,7 @@ services:
             APP_DB_PASSWORD: rcbenevoles2017        # Variable d'environnement utilisée dans notre serveur web (serveur postgre)
             APP_GENERATE_DEV_DATA: 1				# Genere des donnees de tests
             APP_ADMIN_PASSWORD: testadmin
+            APP_LOG_FILE_PATH: logs/rcb.log
         deploy:
             restart_policy:
                 condition: on-failure
