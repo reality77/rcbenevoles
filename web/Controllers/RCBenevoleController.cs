@@ -8,13 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using dal.models;
 using web.Models;
 using Newtonsoft.Json;
+using web.Utils;
 
 namespace web.Controllers
 {
     public abstract class RCBenevoleController : Controller
     {
-        private const string LOG_PREFIX = "({X_UserLogin}@{X_ClientIp}) [{X_ControllerName}.{X_ActionName}] ";
-
         protected RCBenevoleContext _context;
 
         public RCBenevoleContext GetDbContext() => _context;
@@ -46,56 +45,22 @@ namespace web.Controllers
 
         protected void LogDebug(string templateMessage, params object[] propertyValues)
         {
-            Serilog.Log.Debug(LOG_PREFIX + templateMessage, GenerateFullPropertyValues(propertyValues));
+            LogExtensionUtils.LogDebug(this, templateMessage, propertyValues);
         }
 
         protected void LogInfo(string templateMessage, params object[] propertyValues)
         {
-            Serilog.Log.Information(LOG_PREFIX + templateMessage, GenerateFullPropertyValues(propertyValues));
+            LogExtensionUtils.LogInfo(this, templateMessage, propertyValues);
         }
 
         protected void LogWarning(string templateMessage, params object[] propertyValues)
         {
-            Serilog.Log.Warning(LOG_PREFIX + templateMessage, GenerateFullPropertyValues(propertyValues));
+            LogExtensionUtils.LogWarning(this, templateMessage, propertyValues);
         }
 
         protected void LogError(string templateMessage, params object[] propertyValues)
         {
-            Serilog.Log.Error(LOG_PREFIX + templateMessage, GenerateFullPropertyValues(propertyValues));
-        }
-
-        private object[] GenerateFullPropertyValues(params object[] propertyValues)
-        {
-            const int NB_PROPERTIES_ADDED = 4;
-
-            var realProps = new object[propertyValues.Length + NB_PROPERTIES_ADDED];
-
-            int propindex = 0;
-
-            // 1 - Utilisateur
-            if(!User.Identity.IsAuthenticated)
-                realProps[propindex++] = "<anonymous>";
-            else
-                realProps[propindex++] = User.Identity.Name;
-
-            realProps[propindex++] = this.Request.HttpContext.Connection.RemoteIpAddress;
-
-            // 2 - Controlleur/Action
-            var actionDesc = this.ControllerContext?.ActionDescriptor;
-            if(actionDesc == null)
-            {
-                realProps[propindex++] = "";
-                realProps[propindex++] = "";
-            }
-            else
-            {
-                realProps[propindex++] = actionDesc.ControllerName;
-                realProps[propindex++] = actionDesc.ActionName;
-            }
-
-            propertyValues.CopyTo(realProps, NB_PROPERTIES_ADDED);
-
-            return realProps;
+            LogExtensionUtils.LogError(this, templateMessage, propertyValues);
         }
 
         public void SetGlobalMessage(string message, EGlobalMessageType messageType)

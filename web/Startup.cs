@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using web.Filters;
 
 namespace web
 {
@@ -31,7 +32,10 @@ namespace web
             services.AddDbContext<dal.RCBenevoleContext>(options =>
                 options.UseNpgsql(connectionString));
 
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new RequestLogFilter());
+            });
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(opt => {

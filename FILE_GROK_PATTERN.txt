@@ -1,1 +1,36 @@
-%{TIMESTAMP_ISO8601:timestamp} \[%{LOGLEVEL:LogLevel}\] (?:\(%{DATA:UserLogin}@%{IP:Ip}\) |)(?:\[%{DATA:ControllerName}\.%{DATA:ActionName}\] |)%{GREEDYDATA:Message}
+Ancien modele de logs
+---------------------
+
+But : réutiliser au maxium les meme noms de champs que le nouveau modèle
+TODO : traiter ce type de messages (bien gérer le timestamp - par regex ? ou par fusion de plusieurs champs dans le traitement grok (date, time, timezone) ?)
+
+Action générique de controller :
+
+2018-03-14 16:02:52.834 +01:00 [INF] (admin) [Centres.Edit] Centre #1 (a) modifié
+
+(gérer aussi [WRN], [ERR] et [FTL])
+
+Message générique :
+
+2018-03-14 16:02:52.852 +01:00 [INF] Request finished in 150.9045ms 302 
+
+
+Nouveau modele de logs
+----------------------
+
+Request :
+
+%{TIMESTAMP_ISO8601:timestamp} \[%{LOGLEVEL:LogLevel}\] \(%{DATA:UserLogin}@%{IP:ClientIp}\) \[%{WORD:Method} %{DATA:ControllerName}\.%{DATA:ActionName}\] >> %{URIPATH:RequestUriPath} \[%{DATA:RequestUriQueryData}\]
+
+Response :
+
+%{TIMESTAMP_ISO8601:timestamp} \[%{LOGLEVEL:LogLevel}\] \(%{DATA:UserLogin}@%{IP:ClientIp}\) \[%{WORD:Method} %{DATA:ControllerName}\.%{DATA:ActionName}\] << %{URIPATH:RequestUriPath} \[%{DATA:RequestUriQueryData}\] returned %{POSINT:ResponseStatus} \(%{POSINT:ResponseElapsedTimeMs} ms\)
+
+Action générique de controller :
+
+%{TIMESTAMP_ISO8601:timestamp} \[%{LOGLEVEL:LogLevel}\] \(%{DATA:UserLogin}@%{IP:ClientIp}\) \[%{WORD:Method} %{DATA:ControllerName}\.%{DATA:ActionName}\] %{GREEDYDATA:LogMessage}
+
+Message générique :
+
+%{TIMESTAMP_ISO8601:timestamp} \[%{LOGLEVEL:LogLevel}\] %{GREEDYDATA:LogMessage}
+
