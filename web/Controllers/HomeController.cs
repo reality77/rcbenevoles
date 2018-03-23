@@ -30,11 +30,11 @@ namespace web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(LoginPasswordModel model)
         {
-            LogInfo("[LOGIN] Tentative de connexion de {UserLogin}", model.Login);
+            LogInfo("[LOGIN-TRY:{UserLogin}] Tentative de connexion de {UserLogin}", model.Login);
 
             if (!ModelState.IsValid)
             {
-                LogWarning("[LOGIN] Echec de connexion de {UserLogin} : ModelState invalide ({@ModelState})", model.Login, ModelState);
+                LogWarning("[LOGIN-FAIL:{UserLogin}] Echec de connexion de {UserLogin} : ModelState invalide ({@ModelState})", model.Login, ModelState);
                 return View();
             }
 
@@ -42,14 +42,14 @@ namespace web.Controllers
 
             if (dbuser == null)
             {
-                LogWarning("[LOGIN] Echec de connexion de {UserLogin} : Utilisateur inconnu", model.Login);
+                LogWarning("[LOGIN-FAIL:{UserLogin}] Echec de connexion de {UserLogin} : Utilisateur inconnu", model.Login);
                 ModelState.AddModelError("", "Echec de la connexion. Vérifier votre login et votre mot de passe");
                 return View();
             }
 
             if(!dbuser.TestPassword(model.Password))
             {
-                LogWarning("[LOGIN] Echec de connexion de {UserLogin} : Mot de passe invalide", model.Login);
+                LogWarning("[LOGIN-FAIL:{UserLogin}] Echec de connexion de {UserLogin} : Mot de passe invalide", model.Login);
                 ModelState.AddModelError("", "Echec de la connexion. Vérifier votre login et votre mot de passe");
                 return View();
             }
@@ -69,7 +69,7 @@ namespace web.Controllers
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
 
-            LogInfo("[LOGIN] Succès de la connexion de {UserLogin}", model.Login);
+            LogInfo("[LOGIN-SUCCESS:{UserLogin}] Succès de la connexion de {UserLogin}", model.Login);
 
             return RedirectToAction(nameof(Index));
         }
