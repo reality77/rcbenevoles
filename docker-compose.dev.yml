@@ -6,7 +6,7 @@ services:
     
     # SERVICE webapp : notre application web
     webapp:
-        image: rcbenevoles
+        image: rcbenevoles:latest
         environment:
             APP_DB_SERVER: appdb                    # Variable d'environnement utilisée dans notre serveur web (serveur postgre)
             APP_DB_PASSWORD: rcbenevoles2017        # Variable d'environnement utilisée dans notre serveur web (serveur postgre)
@@ -23,12 +23,15 @@ services:
             - "5000:5000"
         depends_on:
             - appdb
+            - filebeat
+        volumes:
+            - log_data:/app/logs
         networks:
             - backnet
 
     # SERVICE appdb : notre base de données
     appdb:
-        image: postgres
+        image: postgres:alpine
         volumes:
             - db_data:/var/lib/postgresql/data
         restart: always
@@ -51,6 +54,13 @@ services:
         networks:
             - backnet
 
+    filebeat:
+        image: rcb-filebeat:latest
+        volumes:
+            - log_data:/usr/share/filebeat/logs/rcbenevoles
+        networks:
+            - backnet
+
 # ****** NETWORKS
 
 networks:
@@ -61,3 +71,4 @@ networks:
 
 volumes:
     db_data: 
+    log_data: 
