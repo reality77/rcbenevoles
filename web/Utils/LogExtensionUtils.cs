@@ -43,7 +43,7 @@ namespace web.Utils
             else
                 realProps[propindex++] = controller.User.Identity.Name;
 
-            realProps[propindex++] = controller.Request.HttpContext.Connection.RemoteIpAddress;
+            realProps[propindex++] = GetClientIpAddress(controller.Request.HttpContext);
 
             // 2 - Method/Controlleur/Action
             realProps[propindex++] = controller.Request.Method;
@@ -63,6 +63,14 @@ namespace web.Utils
             propertyValues.CopyTo(realProps, NB_PROPERTIES_ADDED);
 
             return realProps;
+        }
+
+        public static string GetClientIpAddress(HttpContext context)
+        {
+            if (context.Request?.Headers.TryGetValue("X-Real-IP", out Microsoft.Extensions.Primitives.StringValues ips) == true)
+                return ips[0];
+
+            return context.Connection.RemoteIpAddress.ToString();
         }
     }
 }
