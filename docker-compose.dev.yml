@@ -9,10 +9,11 @@ services:
         image: rcbenevoles:latest
         environment:
             APP_DB_SERVER: appdb                    # Variable d'environnement utilisée dans notre serveur web (serveur postgre)
-            APP_DB_PASSWORD: rcbenevoles2017        # Variable d'environnement utilisée dans notre serveur web (serveur postgre)
+            APP_DB_PASSWORD: rcbenevoles            # Variable d'environnement utilisée dans notre serveur web (serveur postgre)
             APP_GENERATE_DEV_DATA: 1                # Genere des donnees de tests
             APP_ADMIN_PASSWORD: testadmin
             APP_LOG_FILE_PATH: logs/rcb.log
+            APP_DB_BACKUP_PATH: db_backups
             # APP_LOG_ES_NODE_URIS: http://localhost:9200
             # APP_LOG_ES_INDEX_FORMAT: rcb-{0:yyyy.MM.dd}
             # APP_LOG_ES_TEMPLATE_NAME: rcb-template
@@ -26,6 +27,7 @@ services:
             - filebeat
         volumes:
             - log_data:/app/logs
+            - db_backups:/app/db_backups:ro     # ro = readonly
         networks:
             - backnet
 
@@ -34,10 +36,11 @@ services:
         image: postgres:alpine
         volumes:
             - db_data:/var/lib/postgresql/data
+            - db_backups:/root/db_backups
         restart: always
         environment:
             POSTGRES_USER: rcbenevoles
-            POSTGRES_PASSWORD: rcbenevoles2017
+            POSTGRES_PASSWORD: rcbenevoles
         networks:
             - backnet
 
@@ -54,12 +57,12 @@ services:
         networks:
             - backnet
 
-    filebeat:
-        image: rcb-filebeat:latest
-        volumes:
-            - log_data:/usr/share/filebeat/logs/rcbenevoles
-        networks:
-            - backnet
+    # filebeat:
+    #    image: rcb-filebeat:latest
+    #    volumes:
+    #        - log_data:/usr/share/filebeat/logs/rcbenevoles
+    #    networks:
+    #        - backnet
 
 # ****** NETWORKS
 
@@ -71,4 +74,5 @@ networks:
 
 volumes:
     db_data: 
+    db_backups:
     log_data: 

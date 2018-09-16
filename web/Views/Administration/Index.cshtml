@@ -1,0 +1,28 @@
+﻿@model AdministrationData
+
+@{
+    ViewData["Title"] = "Administration";
+}
+
+<h2>Gestion des bénévoles</h2>
+
+<h3>Administration du site</h3>
+
+<div class="row">
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BenevolesCount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BenevolesCount)
+        </dd>
+    </dl>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PointagesCount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PointagesCount)
+        </dd>
+    </dl>
+</div>
