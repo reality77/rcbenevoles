@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using web.Filters;
+using System.Collections.Generic;
+using System;
+using Microsoft.Extensions.Primitives;
+using System.Linq;
 
 namespace web.Utils
 {
@@ -65,12 +69,60 @@ namespace web.Utils
             return realProps;
         }
 
-        public static string GetClientIpAddress(HttpContext context)
-        {
-            if (context.Request?.Headers.TryGetValue("X-Real-IP", out Microsoft.Extensions.Primitives.StringValues ips) == true)
-                return ips[0];
+		public static string GetClientIpAddress(HttpContext context)
+		{
+			string ip = null;
 
-            return context.Connection.RemoteIpAddress.ToString();
-        }
+            // FROM https://stackoverflow.com/questions/28664686/how-do-i-get-client-ip-address-in-asp-net-core
+
+			// todo support new "Forwarded" header (2014) https://en.wikipedia.org/wiki/X-Forwarded-For
+
+			// X-Forwarded-For (csv list):  Using the First entry in the list seems to work
+			// for 99% of cases however it has been suggested that a better (although tedious)
+			// approach might be to read each IP from right to left and use the first public IP.
+			// http://stackoverflow.com/a/43554000/538763
+			ip = GetHeaderValueAs<string>(context, "X-Forwarded-For").SplitCsv().FirstOrDefault();
+
+			// RemoteIpAddress is always null in DNX RC1 Update1 (bug).
+			if (string.IsNullOrWhiteSpace(ip) && context.Connection?.RemoteIpAddress != null)
+				ip = context.Connection.RemoteIpAddress.ToString();
+
+			if (string.IsNullOrWhiteSpace(ip))
+				ip = GetHeaderValueAs<string>(context, "REMOTE_ADDR");
+
+			// _httpContextAccessor.HttpContext?.Request?.Host this is the local host.
+
+			if (string.IsNullOrWhiteSpace(ip))
+				throw new Exception("Unable to determine caller's IP.");
+
+			return ip;
+		}
+
+		private static T GetHeaderValueAs<T>(HttpContext context, string headerName)
+		{
+			StringValues values;
+
+			if (context.Request?.Headers?.TryGetValue(headerName, out values) ?? false)
+			{
+				string rawValues = values.ToString();   // writes out as Csv when there are multiple.
+
+				if (!string.IsNullOrEmpty(rawValues))
+				    return (T)Convert.ChangeType(values.ToString(), typeof(T));
+			}
+			return default(T);
+		}
+
+		public static List<string> SplitCsv(this string csvList, bool nullOrWhitespaceInputReturnsNull = false)
+		{
+			if (string.IsNullOrWhiteSpace(csvList))
+				return nullOrWhitespaceInputReturnsNull ? null : new List<string>();
+
+			return csvList
+				.TrimEnd(',')
+				.Split(',')
+				.AsEnumerable<string>()
+				.Select(s => s.Trim())
+				.ToList();
+		}
     }
 }
