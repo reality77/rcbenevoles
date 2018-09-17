@@ -20,27 +20,54 @@ namespace web.Controllers
 
         public IActionResult Index()
         {
-            // Log files
-            var fileLogPath = Path.GetDirectoryName(Environment.GetEnvironmentVariable("APP_LOG_FILE_PATH"));
-            var logFiles = Directory.EnumerateFiles(fileLogPath).Select(f => new AdministrationFileData {
-                Name = Path.GetFileName(f),
-            });
-
-            // DB backup files
-            var backupLogPath = Environment.GetEnvironmentVariable("APP_DB_BACKUP_PATH");
-            var backupFiles = Directory.EnumerateFiles(backupLogPath).Select(f => new AdministrationFileData {
-                Name = Path.GetFileName(f),
-            });
-
-            // Model
             var model = new AdministrationData
             {
                 BenevolesCount = _context.Benevoles.Count(),
                 PointagesCount = _context.Pointages.Count(),
                 LastCreatedPointage = _context.Pointages.OrderByDescending(p => p.ID).FirstOrDefault(),
-                LogFiles = logFiles,
-                BackupFiles = backupFiles,
             };
+
+            // Log files
+            var pathLogs = Environment.GetEnvironmentVariable("APP_LOG_FILE_PATH");
+
+            if(!string.IsNullOrWhiteSpace(pathLogs))
+            {
+                var dirLogs = new DirectoryInfo(Path.GetDirectoryName(pathLogs));
+
+                var logFiles = dirLogs.GetFiles()
+                    .OrderByDescending(f => f.LastWriteTime)
+                    .Select(f => new AdministrationFileData {
+                        Name = f.Name,
+                        Date = f.LastWriteTime,
+                    });
+
+                model.LogFiles = logFiles;
+            }
+            else
+            {
+                model.LogFilesError = "Aucun chemin de logs configuré";
+            }
+
+            // DB backup files
+            var pathBackups = Environment.GetEnvironmentVariable("APP_DB_BACKUP_PATH");
+
+            if(!string.IsNullOrWhiteSpace(pathBackups))
+            {
+                var dirBackups = new DirectoryInfo(pathBackups);
+
+                var backupFiles = dirBackups.GetFiles()
+                    .OrderByDescending(f => f.LastWriteTime)
+                    .Select(f => new AdministrationFileData {
+                        Name = f.Name,
+                        Date = f.LastWriteTime,
+                    });
+
+                model.BackupFiles = backupFiles;
+            }
+            else
+            {
+                model.BackupFilesError = "Aucun chemin de backup configuré";
+            }
 
             return View(model);
         }

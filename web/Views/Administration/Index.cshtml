@@ -26,3 +26,14 @@
         </dd>
     </dl>
 </div>
+
+<div class="row">
+    <h3>Backups de données</h3>
+    <ul>
+    @foreach (var backupFile in Model.BackupFiles) {
+        <li>
+            <a asp-action="DownloadBackupFile" asp-route-name="@backupFile.Name">@backupFile.GetLinkText()</a>
+        </li>
+    }
+    </ul>
+</div>
