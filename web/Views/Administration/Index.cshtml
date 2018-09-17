@@ -27,8 +27,11 @@
     </dl>
 </div>
 
+<h3>Backups de données</h3>
+
 <div class="row">
-    <h3>Backups de données</h3>
+@if(string.IsNullOrEmpty(Model.BackupFilesError))
+{
     <ul>
     @foreach (var backupFile in Model.BackupFiles) {
         <li>
@@ -36,4 +39,36 @@
         </li>
     }
     </ul>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span class="sr-only">Error:</span>
+        @Model.BackupFilesError
+    </div>
+}
+</div>
+
+<h3>Fichiers logs</h3>
+
+<div class="row">
+@if(string.IsNullOrEmpty(Model.LogFilesError))
+{
+    <ul>
+    @foreach (var backupFile in Model.LogFiles) {
+        <li>
+            <a asp-action="DownloadLogFile" asp-route-name="@backupFile.Name">@backupFile.GetLinkText()</a>
+        </li>
+    }
+    </ul>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span class="sr-only">Error:</span>
+        @Model.LogFilesError
+    </div>
+}
 </div>

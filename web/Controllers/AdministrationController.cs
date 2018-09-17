@@ -30,18 +30,24 @@ namespace web.Controllers
             // Log files
             var pathLogs = Environment.GetEnvironmentVariable("APP_LOG_FILE_PATH");
 
-            if(!string.IsNullOrWhiteSpace(pathLogs))
+            if (!string.IsNullOrWhiteSpace(pathLogs))
             {
                 var dirLogs = new DirectoryInfo(Path.GetDirectoryName(pathLogs));
 
-                var logFiles = dirLogs.GetFiles()
-                    .OrderByDescending(f => f.LastWriteTime)
-                    .Select(f => new AdministrationFileData {
-                        Name = f.Name,
-                        Date = f.LastWriteTime,
-                    });
+                if (dirLogs.Exists)
+                {
+                    var logFiles = dirLogs.GetFiles()
+                        .OrderByDescending(f => f.LastWriteTime)
+                        .Select(f => new AdministrationFileData
+                        {
+                            Name = f.Name,
+                            Date = f.LastWriteTime,
+                        });
 
-                model.LogFiles = logFiles;
+                    model.LogFiles = logFiles;
+                }
+                else
+                    model.LogFilesError = "Chemin des logs non trouvé";
             }
             else
             {
@@ -51,18 +57,24 @@ namespace web.Controllers
             // DB backup files
             var pathBackups = Environment.GetEnvironmentVariable("APP_DB_BACKUP_PATH");
 
-            if(!string.IsNullOrWhiteSpace(pathBackups))
+            if (!string.IsNullOrWhiteSpace(pathBackups))
             {
                 var dirBackups = new DirectoryInfo(pathBackups);
 
-                var backupFiles = dirBackups.GetFiles()
-                    .OrderByDescending(f => f.LastWriteTime)
-                    .Select(f => new AdministrationFileData {
-                        Name = f.Name,
-                        Date = f.LastWriteTime,
-                    });
+                if (dirBackups.Exists)
+                {
+                    var backupFiles = dirBackups.GetFiles()
+                        .OrderByDescending(f => f.LastWriteTime)
+                        .Select(f => new AdministrationFileData
+                        {
+                            Name = f.Name,
+                            Date = f.LastWriteTime,
+                        });
 
-                model.BackupFiles = backupFiles;
+                    model.BackupFiles = backupFiles;
+                }
+                else
+                    model.BackupFilesError = "Chemin des backups non trouvé";
             }
             else
             {
@@ -74,14 +86,56 @@ namespace web.Controllers
 
         public IActionResult DownloadLogFile(string name)
         {
-            //TODO
-            return null;
+            //var basePath = Path.GetDirectoryName(Environment.GetEnvironmentVariable("APP_LOG_FILE_PATH"));
+            var basePath = Environment.GetEnvironmentVariable("APP_LOG_FILE_PATH");
+
+            return DownloadInternal(basePath, name);
         }
 
         public IActionResult DownloadBackupFile(string name)
         {
-            //TODO
-            return null;
+            var basePath = Environment.GetEnvironmentVariable("APP_DB_BACKUP_PATH");
+
+            return DownloadInternal(basePath, name);
+        }
+
+        private IActionResult DownloadInternal(string basePath, string name)
+        {
+            // DB backup files
+
+            if (!string.IsNullOrWhiteSpace(basePath))
+            {
+                var path = Path.Combine(basePath, name);
+                if (!System.IO.File.Exists(path))
+                    return NotFound();
+
+                var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                var mimeType = "application/octet-stream";
+
+                switch (Path.GetExtension(name).ToLower())
+                {
+                    case "sql":
+                    case "txt":
+                    case "log":
+                        mimeType = "text/plain";
+                        break;
+                    case "zip":
+                        mimeType = "application/zip";
+                        break;
+                    default:
+                        mimeType = "application/octet-stream";
+                        break;
+                }
+
+                return new FileStreamResult(fileStream, mimeType)
+                {
+                    FileDownloadName = name,
+                };
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }
