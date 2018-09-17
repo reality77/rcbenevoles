@@ -86,8 +86,7 @@ namespace web.Controllers
 
         public IActionResult DownloadLogFile(string name)
         {
-            //var basePath = Path.GetDirectoryName(Environment.GetEnvironmentVariable("APP_LOG_FILE_PATH"));
-            var basePath = Environment.GetEnvironmentVariable("APP_LOG_FILE_PATH");
+            var basePath = Path.GetDirectoryName(Environment.GetEnvironmentVariable("APP_LOG_FILE_PATH"));
 
             return DownloadInternal(basePath, name);
         }
@@ -101,8 +100,6 @@ namespace web.Controllers
 
         private IActionResult DownloadInternal(string basePath, string name)
         {
-            // DB backup files
-
             if (!string.IsNullOrWhiteSpace(basePath))
             {
                 var path = Path.Combine(basePath, name);
