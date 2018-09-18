@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Accueil</title>
+    <title>@ViewData["Title"] - Gestion des bénévoles</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -40,6 +40,7 @@
                     <li><a asp-controller="Centres" asp-action="Index">Centres</a></li>
                     <li><a asp-controller="Utilisateurs" asp-action="Index">Utilisateurs</a></li>
                     <li><a asp-controller="Parametres" asp-action="Index">Autres paramètres</a></li>
+                    <li><a asp-controller="Administration" asp-action="Index">Administration</a></li>
                     }
                     else if (User.HasClaim(cl => cl.Type == ClaimTypes.Role && cl.Value == "BasicAdmin"))
                     {
@@ -70,9 +71,9 @@
             </div>
             <div style="float:left;margin-left:32px">
                 <ul class="list-unstyled list-inline">
-                    <li><a href="@Url.Action("Legal")#license">Licence</a></li>
-                    <li><a href="@Url.Action("Legal")#components">Composants</a></li>
-                    <li><a href="@Url.Action("Legal")#privacy">Données personnelles</a></li>
+                    <li><a href="@Url.Action("Legal", "Home")#license">Licence</a></li>
+                    <li><a href="@Url.Action("Legal", "Home")#components">Composants</a></li>
+                    <li><a href="@Url.Action("Legal", "Home")#privacy">Données personnelles</a></li>
                 </ul>
             </div>
             <div style="float:right">
