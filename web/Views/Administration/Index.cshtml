@@ -4,71 +4,83 @@
     ViewData["Title"] = "Administration";
 }
 
-<h2>Gestion des bénévoles</h2>
+<h2>Administration du site</h2>
 
-<h3>Administration du site</h3>
+<h3>Statistiques</h3>
 
 <div class="row">
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.BenevolesCount)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.BenevolesCount)
-        </dd>
-    </dl>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.PointagesCount)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.PointagesCount)
-        </dd>
-    </dl>
+    <div class="col-md-4 col-xs-12">
+        @Html.DisplayNameFor(model => model.BenevolesCount)
+    </div>
+    <div class="col-md-8 col-xs-12">
+        @Html.DisplayFor(model => model.BenevolesCount)
+    </div>
+    <div class="col-md-4 col-xs-12">
+        @Html.DisplayNameFor(model => model.PointagesCount)
+    </div>
+    <div class="col-md-8 col-xs-12">
+        @Html.DisplayFor(model => model.PointagesCount)
+    </div>
 </div>
 
 <h3>Backups de données</h3>
 
 <div class="row">
-@if(string.IsNullOrEmpty(Model.BackupFilesError))
-{
-    <ul>
-    @foreach (var backupFile in Model.BackupFiles) {
-        <li>
-            <a asp-action="DownloadBackupFile" asp-route-name="@backupFile.Name">@backupFile.GetLinkText()</a>
-        </li>
+    <div class="col-xs-12">
+    @if(!string.IsNullOrEmpty(Model.BackupFilesError))
+    {
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+                @Model.BackupFilesError
+        </div>
     }
-    </ul>
-}
-else
-{
-    <div class="alert alert-danger" role="alert">
-    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-    <span class="sr-only">Error:</span>
-        @Model.BackupFilesError
+    else if(Model.BackupFiles.Count() == 0)
+    {
+        <div class="alert alert-info" role="alert">
+            Aucun fichier de backup n'est présent
+        </div>
+    }
+    else
+    {
+        <ul>
+        @foreach (var backupFile in Model.BackupFiles) {
+            <li>
+                <a asp-action="DownloadBackupFile" asp-route-name="@backupFile.Name">@backupFile.GetLinkText()</a>
+            </li>
+        }
+        </ul>
+    }
     </div>
-}
 </div>
 
 <h3>Fichiers logs</h3>
 
 <div class="row">
-@if(string.IsNullOrEmpty(Model.LogFilesError))
-{
-    <ul>
-    @foreach (var backupFile in Model.LogFiles) {
-        <li>
-            <a asp-action="DownloadLogFile" asp-route-name="@backupFile.Name">@backupFile.GetLinkText()</a>
-        </li>
+    <div class="col-xs-12">
+    @if(!string.IsNullOrEmpty(Model.LogFilesError))
+    {
+        <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+            @Model.LogFilesError
+        </div>
     }
-    </ul>
-}
-else
-{
-    <div class="alert alert-danger" role="alert">
-    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-    <span class="sr-only">Error:</span>
-        @Model.LogFilesError
+    else if(Model.LogFiles.Count() == 0)
+    {
+        <div class="alert alert-info" role="alert">
+            Aucun fichier log n'est présent
+        </div>
+    }
+    else
+    {
+        <ul>
+        @foreach (var backupFile in Model.LogFiles) {
+            <li>
+                <a asp-action="DownloadLogFile" asp-route-name="@backupFile.Name">@backupFile.GetLinkText()</a>
+            </li>
+        }
+        </ul>
+    }
     </div>
-}
 </div>
