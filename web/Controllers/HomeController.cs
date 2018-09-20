@@ -23,6 +23,10 @@ namespace web.Controllers
 
         public IActionResult Index()
         {
+            const string HOME_MESSAGE_FILE = "external/home_message";
+            if(System.IO.File.Exists(HOME_MESSAGE_FILE))
+                ViewData["InformationMessage"] = System.IO.File.ReadAllText(HOME_MESSAGE_FILE);
+
             return View();
         }
 

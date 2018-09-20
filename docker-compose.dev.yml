@@ -28,6 +28,7 @@ services:
         volumes:
             - log_data:/app/logs
             - db_backups:/app/db_backups:ro     # ro = readonly
+            - external_data:/app/external:ro
         networks:
             - backnet
 
@@ -76,3 +77,4 @@ volumes:
     db_data: 
     db_backups:
     log_data: 
+    external_data:

@@ -35,6 +35,7 @@ namespace web
             services.AddMvc(options =>
             {
                 options.Filters.Add(new RequestLogFilter());
+                options.Filters.Add(new MaintenanceModeFilter());
             });
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

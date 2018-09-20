@@ -9,6 +9,16 @@
         <h1>Gestion des pointages des bénévoles</h1>
     </div>
 
+    @if(ViewData.ContainsKey("InformationMessage")) {
+    <div class="col-xs-12 text-center">
+        <div class="alert alert-info" style="margin-top:8px">
+            <p>
+                @Html.Raw(ViewData["InformationMessage"])
+            </p>
+        </div>
+    </div>
+    }
+
     <div class="col-xs-12 col-md-3">
         <div>
             <img src="~/images/restos.png" title="Restaurants du coeur" style="width:100%" />
