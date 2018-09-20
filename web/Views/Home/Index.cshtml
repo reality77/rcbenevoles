@@ -54,6 +54,9 @@
                                     <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
                             </div>
+                            @if(ViewData.ContainsKey("ReturnUrl")) {
+                            <input type="hidden" asp-for="ReturnUrl" value="@ViewData["ReturnUrl"]"/>
+                            }
                             <div class="form-group" style="float:right;margin-right:4px">
                                 <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-log-in"></i> Se connecter</button>
                             </div>

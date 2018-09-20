@@ -15,5 +15,7 @@ namespace web.Models
         [Required]
         [Display(Name ="Mot de passe")]
         public string Password { get; set; }
+
+        public string ReturnUrl { get; set; }
     }
 }
