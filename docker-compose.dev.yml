@@ -45,31 +45,30 @@ services:
         networks:
             - backnet
 
-    # SERVICE visualizer : c'est un service qu'on peut intégrer pour accéder à une page web qui montre les instances de chaque service. Accéder par http://vm:8080
-    visualizer:
-        image: dockersamples/visualizer:stable
+    influxdb:
+        image: influxdb:latest
         ports:
-            - "8080:8080"
+            - "8086:8086"
         volumes:
-            - "/var/run/docker.sock:/var/run/docker.sock"
-        deploy:
-            placement:
-                constraints: [node.role == manager]
+            - influxdb:/var/lib/influxdb
         networks:
+            - lognet
             - backnet
 
-    # filebeat:
-    #    image: rcb-filebeat:latest
-    #    volumes:
-    #        - log_data:/usr/share/filebeat/logs/rcbenevoles
-    #    networks:
-    #        - backnet
+    grafana:
+        image: grafana/grafana
+        ports:
+            - "3000:3000"
+        volumes:
+            - influxdb:/var/lib/influxdb
+        networks:
+            - lognet
 
 # ****** NETWORKS
 
 networks:
     backnet:		# nom du réseau (backnet) sans parametre = reseau load-balancé par défaut
-
+    lognet:
 
 # ****** VOLUMES
 
@@ -78,3 +77,4 @@ volumes:
     db_backups:
     log_data: 
     external_data:
+    influxdb:
