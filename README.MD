@@ -9,6 +9,11 @@ Le base de données utilisée est une base PostgreSQL
 
 L'application a été optimisée afin d'être facilement packageable dans un environnement docker.
 
+## Versions
+
+Master      [![Build Status](https://travis-ci.org/reality77/rcbenevoles.svg?branch=master)](https://travis-ci.org/reality77/rcbenevoles)
+Development [![Build Status](https://travis-ci.org/reality77/rcbenevoles.svg?branch=develop)](https://travis-ci.org/reality77/rcbenevoles)
+
 ## Variables d'environnement
 
 APP_DB_SERVER : Nom ou adresse IP du serveur de base de données
