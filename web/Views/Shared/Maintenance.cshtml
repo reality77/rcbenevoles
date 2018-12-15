@@ -1,4 +1,7 @@
-﻿@using System.Security.Claims
+@{
+    ViewData["Title"] = "Maintenance";
+    Layout = null;
+}
 
 <!DOCTYPE html>
 <html>
@@ -28,53 +31,18 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Accueil</a>
             </div>
-            @if (User.Identity.IsAuthenticated)
-            {
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-controller="Benevoles" asp-action="Index">Bénévoles</a></li>
-                    @if (User.HasClaim(cl => cl.Type == ClaimTypes.Role && cl.Value == "SuperAdmin"))
-                    {
-                    <li><a asp-controller="Centres" asp-action="Index">Centres</a></li>
-                    <li><a asp-controller="Utilisateurs" asp-action="Index">Utilisateurs</a></li>
-                    <li><a asp-controller="Parametres" asp-action="Index">Autres paramètres</a></li>
-                    <li><a asp-controller="Administration" asp-action="Index">Administration</a></li>
-                    }
-                    else if (User.HasClaim(cl => cl.Type == ClaimTypes.Role && cl.Value == "BasicAdmin"))
-                    {
-                        <li><a asp-controller="Centres" asp-action="My">Mon centre</a></li>
-                    }
-                    <li><a asp-controller="Account" asp-action="Index">Mon compte</a></li>
-                    <li><a asp-controller="Account" asp-action="Logout"><i class="glyphicon glyphicon-log-out"></i>  Se déconnecter</a></li>
-                </ul>
-            </div>
-            }
         </div>
     </nav>
     <div class="container body-content">
-        @if (TempData.ContainsKey("__GlobalMessage"))
-        {
-            var message = Newtonsoft.Json.JsonConvert.DeserializeObject<GlobalMessage>(Convert.ToString(TempData["__GlobalMessage"]));
-        <div class="alert @message.GetCssClass()" style="margin-top:8px">
-            <p>
-                @message.Message
-            </p>
-        </div>
-        }
-        @RenderBody()
+
+        <h1 class="text-danger">Maintenance</h1>
+
+        <p>Le site est actuellement fermé pour maintenance. Veuillez retenter ultérieurement</p>
         <hr />
         <footer>
             <div style="float:left">
                 <p>&copy; 2017 - David Durain</p>
-            </div>
-            <div style="float:left;margin-left:32px">
-                <ul class="list-unstyled list-inline">
-                    <li><a href="@Url.Action("Legal", "Home")#license">Licence</a></li>
-                    <li><a href="@Url.Action("Legal", "Home")#components">Composants</a></li>
-                    <li><a href="@Url.Action("Legal", "Home")#privacy">Données personnelles</a></li>
-                </ul>
             </div>
             <div style="float:right">
                 version @(System.Reflection.Assembly.GetAssembly(typeof(web.Program)).GetName().Version.ToString())
@@ -112,6 +80,5 @@
         <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     </environment>
 
-    @RenderSection("Scripts", required: false)
 </body>
 </html>

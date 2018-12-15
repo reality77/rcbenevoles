@@ -21,8 +21,15 @@ namespace web.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string ReturnUrl = null)
         {
+            const string HOME_MESSAGE_FILE = "external/home_message";
+            if(System.IO.File.Exists(HOME_MESSAGE_FILE))
+                ViewData["InformationMessage"] = System.IO.File.ReadAllText(HOME_MESSAGE_FILE);
+
+            if(!string.IsNullOrEmpty(ReturnUrl))
+                ViewData["ReturnUrl"] = ReturnUrl;
+
             return View();
         }
 
@@ -71,7 +78,18 @@ namespace web.Controllers
 
             LogInfo("[LOGIN-SUCCESS:{UserLogin}] Succès de la connexion de {UserLogin}", model.Login);
 
-            return RedirectToAction(nameof(Index));
+            string returnUrl = null;
+
+            if(!string.IsNullOrEmpty(model.ReturnUrl))
+            {
+                if(Uri.TryCreate(model.ReturnUrl, UriKind.Relative, out Uri uri) && !uri.IsAbsoluteUri)
+                    returnUrl = model.ReturnUrl;
+            }
+
+            if(!string.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+            else
+                return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Legal()

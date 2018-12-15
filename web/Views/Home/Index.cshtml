@@ -9,6 +9,16 @@
         <h1>Gestion des pointages des bénévoles</h1>
     </div>
 
+    @if(ViewData.ContainsKey("InformationMessage")) {
+    <div class="col-xs-12 text-center">
+        <div class="alert alert-info" style="margin-top:8px">
+            <p>
+                @Html.Raw(ViewData["InformationMessage"])
+            </p>
+        </div>
+    </div>
+    }
+
     <div class="col-xs-12 col-md-3">
         <div>
             <img src="~/images/restos.png" title="Restaurants du coeur" style="width:100%" />
@@ -44,6 +54,9 @@
                                     <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
                             </div>
+                            @if(ViewData.ContainsKey("ReturnUrl")) {
+                            <input type="hidden" asp-for="ReturnUrl" value="@ViewData["ReturnUrl"]"/>
+                            }
                             <div class="form-group" style="float:right;margin-right:4px">
                                 <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-log-in"></i> Se connecter</button>
                             </div>
@@ -68,6 +81,7 @@
                                 <li><a asp-action="Index" asp-controller="Centres">Gérer les centres</a></li>
                                 <li><a asp-action="Index" asp-controller="Utilisateurs">Gérer les comptes utilisateurs</a></li>
                                 <li><a asp-action="Index" asp-controller="Parametres">Gérer les paramètres annexes</a> (taux kilométrique ...)</li>
+                                <li><a asp-action="Index" asp-controller="Administration">Administrer l'application</a></li>
                             </ul>
                         </p>
                     }

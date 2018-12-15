@@ -1,0 +1,86 @@
+﻿@model AdministrationData
+
+@{
+    ViewData["Title"] = "Administration";
+}
+
+<h2>Administration du site</h2>
+
+<h3>Statistiques</h3>
+
+<div class="row">
+    <div class="col-md-4 col-xs-12">
+        @Html.DisplayNameFor(model => model.BenevolesCount)
+    </div>
+    <div class="col-md-8 col-xs-12">
+        @Html.DisplayFor(model => model.BenevolesCount)
+    </div>
+    <div class="col-md-4 col-xs-12">
+        @Html.DisplayNameFor(model => model.PointagesCount)
+    </div>
+    <div class="col-md-8 col-xs-12">
+        @Html.DisplayFor(model => model.PointagesCount)
+    </div>
+</div>
+
+<h3>Backups de données</h3>
+
+<div class="row">
+    <div class="col-xs-12">
+    @if(!string.IsNullOrEmpty(Model.BackupFilesError))
+    {
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+                @Model.BackupFilesError
+        </div>
+    }
+    else if(Model.BackupFiles.Count() == 0)
+    {
+        <div class="alert alert-info" role="alert">
+            Aucun fichier de backup n'est présent
+        </div>
+    }
+    else
+    {
+        <ul>
+        @foreach (var backupFile in Model.BackupFiles) {
+            <li>
+                <a asp-action="DownloadBackupFile" asp-route-name="@backupFile.Name">@backupFile.GetLinkText()</a>
+            </li>
+        }
+        </ul>
+    }
+    </div>
+</div>
+
+<h3>Fichiers logs</h3>
+
+<div class="row">
+    <div class="col-xs-12">
+    @if(!string.IsNullOrEmpty(Model.LogFilesError))
+    {
+        <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+            @Model.LogFilesError
+        </div>
+    }
+    else if(Model.LogFiles.Count() == 0)
+    {
+        <div class="alert alert-info" role="alert">
+            Aucun fichier log n'est présent
+        </div>
+    }
+    else
+    {
+        <ul>
+        @foreach (var backupFile in Model.LogFiles) {
+            <li>
+                <a asp-action="DownloadLogFile" asp-route-name="@backupFile.Name">@backupFile.GetLinkText()</a>
+            </li>
+        }
+        </ul>
+    }
+    </div>
+</div>

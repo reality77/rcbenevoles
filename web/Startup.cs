@@ -35,6 +35,7 @@ namespace web
             services.AddMvc(options =>
             {
                 options.Filters.Add(new RequestLogFilter());
+                options.Filters.Add(new MaintenanceModeFilter());
             });
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -42,6 +43,8 @@ namespace web
                     opt.Cookie.Name = "rcbene_auth";
                     opt.Cookie.Expiration = TimeSpan.FromHours(2);
                     opt.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
+                    opt.LoginPath = "/Home";
+                    opt.LogoutPath = "/Account/Logout";
                 });
         }
 
