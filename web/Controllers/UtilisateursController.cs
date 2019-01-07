@@ -179,7 +179,7 @@ namespace web.Controllers
                     return View(model);
                 }
 
-                utilisateur.SetPassword(utilisateur.Password);
+                utilisateur.SetPassword(model.NewPassword);
 
                 _context.Update(utilisateur);
                 await _context.SaveChangesAsync();
