@@ -348,7 +348,7 @@
         </div>
         <div style="display:inline-block;width:100%">
             <div style="float:left">
-                <span><em>Téléphone : </em> <strong>@Model.Benevole.Telephone</strong></span>
+                <span><em>Téléphone : </em> <strong>@Model.FormatPhoneNumber()</strong></span>
             </div>
             <div style="float:right">
                 <span><em>Distance A/R domicile - lieu de bénévolat : </em> <strong>@Model.Adresse.DistanceCentre.ToString("0.#") km</strong></span>
