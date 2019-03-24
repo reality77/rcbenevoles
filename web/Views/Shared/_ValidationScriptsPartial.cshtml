@@ -3,6 +3,7 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 </environment>
 <environment exclude="Development">
+    @* Arrêt de l'utilisation du CDN car utilisation de document.write en cas de fallback. Or, document.write est bloqué par chrome
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"
             asp-fallback-src="~/lib/jquery-validation/dist/jquery.validate.min.js"
             asp-fallback-test="window.jQuery && window.jQuery.validator"
@@ -15,4 +16,7 @@
             crossorigin="anonymous"
             integrity="sha384-JrXK+k53HACyavUKOsL+NkmSesD2P+73eDMrbTtTk0h4RmOF8hF8apPlkp26JlyH">
     </script>
+    *@
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 </environment>
