@@ -1,6 +1,12 @@
 language: csharp
 mono: none
 dotnet: 2.0.0
+
+addons:
+  sonarcloud:
+    organization: "reality77_rcbenevoles"
+
 script:
  - dotnet restore
  - dotnet build
+ - sonar-scanner 
