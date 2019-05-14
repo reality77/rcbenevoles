@@ -4,7 +4,7 @@ dotnet: 2.0.0
 
 addons:
   sonarcloud:
-    organization: "reality77_rcbenevoles"
+    organization: "reality77-github"
 
 script:
  - dotnet restore
