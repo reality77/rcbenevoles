@@ -3,8 +3,7 @@ mono: none
 dotnet: 2.1.502
 
 env:
-  - PATH="$PATH:~/.dotnet/tools"
-  - VERSION="1.6.2"
+  - PATH="$PATH:~/.dotnet/tools" VERSION="1.6.2"
   
 git:
   depth: false
@@ -17,7 +16,7 @@ install:
   - dotnet tool install --global dotnet-sonarscanner --version 4.6.1
   
 script:
- - dotnet sonarscanner begin /k:"reality77_rcbenevoles" /v:${VERSION} /d:sonar.exclusions="web/wwwroot/lib/**" /d:sonar.sourceEncoding="UTF-8"
+ - dotnet sonarscanner begin /k:"reality77_rcbenevoles" /v:$VERSION /d:sonar.exclusions="web/wwwroot/lib/**" /d:sonar.sourceEncoding="UTF-8"
  - dotnet restore
  - dotnet build
  - dotnet sonarscanner end
