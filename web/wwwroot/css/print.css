@@ -63,7 +63,7 @@ body
     border-right-width: 1pt;
 }
 
-border_double.btitle {
+.border_double.btitle {
     border-top-color:black;
     border-top-style: double;
     border-top-width: 3pt;
@@ -226,7 +226,7 @@ td.day_in_month {
     page-break-inside: avoid;
 }
 
-table_details thead tr {
+.table_details thead tr {
     page-break-inside: avoid;
 }
 
