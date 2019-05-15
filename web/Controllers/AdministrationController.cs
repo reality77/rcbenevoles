@@ -7,6 +7,7 @@ using dal;
 using Microsoft.AspNetCore.Authorization;
 using web.Models;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace web.Controllers
 {
@@ -102,6 +103,10 @@ namespace web.Controllers
         {
             if (!string.IsNullOrWhiteSpace(basePath))
             {
+                // FIX Vulnerabilité Path Traversal
+                if (!Regex.IsMatch(name, @"^[a-zA-Z0-9_\-\.]+$"))
+                    return BadRequest("Bad file format");
+
                 var path = Path.Combine(basePath, name);
                 if (!System.IO.File.Exists(path))
                     return NotFound();
