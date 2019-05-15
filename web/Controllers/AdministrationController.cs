@@ -92,13 +92,6 @@ namespace web.Controllers
             return DownloadInternal(basePath, name);
         }
 
-        public IActionResult DownloadBackupFile(string name)
-        {
-            var basePath = Environment.GetEnvironmentVariable("APP_DB_BACKUP_PATH");
-
-            return DownloadInternal(basePath, name);
-        }
-
         private IActionResult DownloadInternal(string basePath, string name)
         {
             if (!string.IsNullOrWhiteSpace(basePath))
