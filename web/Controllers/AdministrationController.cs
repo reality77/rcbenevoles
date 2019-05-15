@@ -7,6 +7,7 @@ using dal;
 using Microsoft.AspNetCore.Authorization;
 using web.Models;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace web.Controllers
 {
@@ -91,17 +92,14 @@ namespace web.Controllers
             return DownloadInternal(basePath, name);
         }
 
-        public IActionResult DownloadBackupFile(string name)
-        {
-            var basePath = Environment.GetEnvironmentVariable("APP_DB_BACKUP_PATH");
-
-            return DownloadInternal(basePath, name);
-        }
-
         private IActionResult DownloadInternal(string basePath, string name)
         {
             if (!string.IsNullOrWhiteSpace(basePath))
             {
+                // FIX Vulnerabilité Path Traversal
+                if (!Regex.IsMatch(name, @"^[a-zA-Z0-9_\-\.]+$"))
+                    return BadRequest("Bad file format");
+
                 var path = Path.Combine(basePath, name);
                 if (!System.IO.File.Exists(path))
                     return NotFound();

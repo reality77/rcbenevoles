@@ -8,7 +8,7 @@ namespace web.Models
 {
     public class PrintIndexModel
     {
-        public List<PrintIndexPeriod> Periods;
+        public List<PrintIndexPeriod> Periods { get; set; }
 
         public dal.models.Benevole Benevole { get; set; }
 

@@ -1,6 +1,22 @@
 language: csharp
 mono: none
-dotnet: 2.0.0
+dotnet: 2.1.502
+
+env:
+  - PATH="$PATH:~/.dotnet/tools"
+  
+git:
+  depth: false
+
+addons:
+  sonarcloud:
+    organization: "reality77-github"
+
+install:
+  - dotnet tool install --global dotnet-sonarscanner --version 4.6.1
+  
 script:
+ - dotnet sonarscanner begin /k:"reality77_rcbenevoles" /v:1.6.1 /d:sonar.exclusions="web/wwwroot/lib/**" /d:sonar.sourceEncoding="UTF-8"
  - dotnet restore
  - dotnet build
+ - dotnet sonarscanner end
