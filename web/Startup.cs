@@ -37,7 +37,7 @@ namespace web
             {
                 options.Filters.Add(new RequestLogFilter());
                 options.Filters.Add(new MaintenanceModeFilter());
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(opt => {
