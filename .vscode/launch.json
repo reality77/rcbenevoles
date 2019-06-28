@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}/web/bin/Debug/netcoreapp2.1/web.dll",
+            "program": "${workspaceRoot}/web/bin/Debug/netcoreapp2.2/web.dll",
             "args": [],
             "cwd": "${workspaceRoot}/web",
             "stopAtEntry": false,
