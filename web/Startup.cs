@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -36,7 +37,7 @@ namespace web
             {
                 options.Filters.Add(new RequestLogFilter());
                 options.Filters.Add(new MaintenanceModeFilter());
-            });
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(opt => {
