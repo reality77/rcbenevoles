@@ -26,7 +26,7 @@ else
             if (period.Adresses.Count == 1)
             {
                 <li>
-                    <a asp-action="Print" asp-route-addressId="@period.Adresses.First().ID" asp-route-period="@period.PeriodId" asp-route-year="@period.Start.Year" target="_blank">Du <strong>@period.Start.ToString("dddd d MMMM")</strong> au <strong>@period.End.AddDays(-1).ToString("dddd d MMMM yyyy")</strong></a>
+                    <a asp-action="Print" asp-route-id="@Model.Benevole.ID" asp-route-addressId="@period.Adresses.First().ID" asp-route-period="@period.PeriodId" asp-route-year="@period.Start.Year" target="_blank">Du <strong>@period.Start.ToString("dddd d MMMM")</strong> au <strong>@period.End.AddDays(-1).ToString("dddd d MMMM yyyy")</strong></a>
                 </li>
             }
             else
@@ -37,7 +37,7 @@ else
                 @foreach (var adresse in period.Adresses)
                 {
                     <li>
-                        à l'adresse <a asp-action="Print" asp-route-addressId="@adresse.ID" asp-route-period="@period.PeriodId" asp-route-year="@period.Start.Year" target="_blank">@adresse.GetAdresseComplete(false)</a>
+                        à l'adresse <a asp-action="Print" asp-route-id="@Model.Benevole.ID" asp-route-addressId="@adresse.ID" asp-route-period="@period.PeriodId" asp-route-year="@period.Start.Year" target="_blank">@adresse.GetAdresseComplete(false)</a>
                     </li>
                 }
                 </ul>

@@ -126,6 +126,7 @@ namespace web.Controllers
         }
 
         [HttpGet("Pointages/Benevole/{id}/editcreate")]
+        // Le warning MVC1004 ne devrait pas apparaitre (bug analyzer) : ne pas modifier (https://github.com/aspnet/AspNetCore/issues/6945)
         public async Task<IActionResult> BenevoleEditOrCreate(int id, DateTime date)
         {
             var benevole = await _context.Benevoles.Include(b => b.Adresses).ThenInclude(a => a.Centre)

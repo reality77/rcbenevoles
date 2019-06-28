@@ -37,7 +37,8 @@ namespace web
             {
                 options.Filters.Add(new RequestLogFilter());
                 options.Filters.Add(new MaintenanceModeFilter());
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                options.EnableEndpointRouting = false; // Use the routing logic of ASP.NET Core 2.1 or earlier:
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(opt => {
