@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.1-alpine AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2-alpine AS build-env
 
 # Set the working directory to /app
 WORKDIR /app
