@@ -28,24 +28,10 @@ namespace web
                 .WriteTo.LiterateConsole();
 
             var fileLogPath = Environment.GetEnvironmentVariable("APP_LOG_FILE_PATH");
-            var esLogNodeUris = Environment.GetEnvironmentVariable("APP_LOG_ES_NODE_URIS");
-            var esLogIndexFormat = Environment.GetEnvironmentVariable("APP_LOG_ES_INDEX_FORMAT");
-            var esLogTemplateName = Environment.GetEnvironmentVariable("APP_LOG_ES_TEMPLATE_NAME");
 
             int fileLogFileCount = 0;
             int.TryParse(Environment.GetEnvironmentVariable("APP_LOG_FILE_COUNT"), out fileLogFileCount);
 
-            if (!string.IsNullOrEmpty(esLogNodeUris))
-            {
-                if (string.IsNullOrEmpty(esLogTemplateName))
-                    esLogTemplateName = null;
-
-                if (string.IsNullOrEmpty(esLogIndexFormat))
-                    esLogIndexFormat = "serilog-{0:yyyy.MM.dd}";
-
-                loggerConfig = loggerConfig.WriteTo.Elasticsearch(nodeUris: esLogNodeUris, indexFormat: esLogIndexFormat, templateName: esLogTemplateName);
-            }
-            
             if(!string.IsNullOrEmpty(fileLogPath))
                 loggerConfig = loggerConfig.WriteTo.File(fileLogPath, rollingInterval: RollingInterval.Day, outputTemplate:"{Timestamp:o} [{Level:u4}] {Message:lj}{NewLine}{Exception}", retainedFileCountLimit: (fileLogFileCount > 0 ? (int?)fileLogFileCount : null));
 

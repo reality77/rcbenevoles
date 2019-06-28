@@ -46,17 +46,17 @@ services:
             - backnet
 
     # SERVICE visualizer : c'est un service qu'on peut intégrer pour accéder à une page web qui montre les instances de chaque service. Accéder par http://vm:8080
-    visualizer:
-        image: dockersamples/visualizer:stable
-        ports:
-            - "8080:8080"
-        volumes:
-            - "/var/run/docker.sock:/var/run/docker.sock"
-        deploy:
-            placement:
-                constraints: [node.role == manager]
-        networks:
-            - backnet
+    #visualizer:
+    #    image: dockersamples/visualizer:stable
+    #    ports:
+    #        - "8080:8080"
+    #    volumes:
+    #        - "/var/run/docker.sock:/var/run/docker.sock"
+    #    deploy:
+    #        placement:
+    #            constraints: [node.role == manager]
+    #    networks:
+    #        - backnet
 
     # filebeat:
     #    image: rcb-filebeat:latest
