@@ -1,4 +1,4 @@
-FROM microsoft/aspnetcore-build:2.0 AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:2.1-alpine AS build-env
 
 # Set the working directory to /app
 WORKDIR /app
@@ -11,7 +11,7 @@ RUN dotnet restore
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
-FROM microsoft/aspnetcore:2.0
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-alpine
 WORKDIR /app
 COPY --from=build-env /app/web/out .
 
