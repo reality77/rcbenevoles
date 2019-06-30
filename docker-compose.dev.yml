@@ -24,7 +24,6 @@ services:
             - "5000:5000"
         depends_on:
             - appdb
-            - filebeat
         volumes:
             - log_data:/app/logs
             - db_backups:/app/db_backups:ro     # ro = readonly
@@ -68,7 +67,7 @@ services:
 # ****** NETWORKS
 
 networks:
-    backnet:		# nom du réseau (backnet) sans parametre = reseau load-balancé par défaut
+    backnet:     # nom du réseau (backnet) sans parametre = reseau load-balancé par défaut
 
 
 # ****** VOLUMES
