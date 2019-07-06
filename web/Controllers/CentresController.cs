@@ -171,6 +171,30 @@ namespace web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet("Pointages/Centres/{id}/printpresencehours")]
+        public async Task<IActionResult> PrintPresenceHours(int id, int period, int year)
+        {
+            var centre = await _context.Centres.SingleOrDefaultAsync(c => c.ID == id);
+
+            var presences = _context.Pointages
+                .Include(p => p.Benevole)
+                .Include(p => p.Adresse)
+                .Where(p => p.Adresse.CentreID == id)
+                // TODO DATE -- .Where(p => p.Date)
+                .GroupBy(p => p.Benevole);
+
+            int coefHours = 4;
+
+            var model = new PrintCentrePresenceModel();
+            model.Presences = new List<(Benevole benevole, int nbar, int heures)>();
+            model.Centre = centre;
+
+            foreach(var pres in presences)
+                model.Presences.Add((pres.Key, pres.Sum(p => p.NbDemiJournees), pres.Sum(p => p.NbDemiJournees) * coefHours));
+
+            return View(model);
+        }
+
         private bool CentreExists(int id)
         {
             return _context.Centres.Any(e => e.ID == id);

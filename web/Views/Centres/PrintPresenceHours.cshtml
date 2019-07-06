@@ -1,0 +1,76 @@
+﻿@model PrintCentrePresenceModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/print.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/print.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body>
+    <div class="fullpage">
+        <div>
+            <div>
+                <span class="formlabel">Centre :</span>
+            </div>
+            <div>
+                <span class="formfield">@Model.Centre.Nom</span>
+            </div>
+
+            <div>
+                <span>Année <strong>@Model.PeriodStart.Year</strong></span>
+                <br />
+                <span class="formlabel">Période concernée : </span>
+                <span>@Model.PeriodStart.ToString("dd MMMM") au @Model.PeriodEnd.ToString("dd MMMM yyyy")</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 0.8cm">
+            <h1>
+                <span>Fiche de présence des bénévoles</span>
+            </h1>
+        </div>
+
+        <div style="margin-top: 0.3cm">
+            <table class="table_details" style="width:100%">
+                <thead>
+                    <tr>
+                        <th class="table_separator" style="width:30%">Nom</th>
+                        <th class="table_separator" style="width:30%">Prénom</th>
+                        <th class="table_separator" style="width:20%">Nb A/R</th>
+                        <th class="table_separator" style="width:20%">Présence (heures)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var presence in Model.Presences) {
+                    <tr>
+                        <td>
+                            <span>@presence.benevole.Nom</span>
+                        </td>
+                        <td>
+                            <span>@presence.benevole.Prenom</span>
+                        </td>
+                        <td>
+                            <span>@presence.nbar</span>
+                        </td>
+                        <td>
+                            <span>@presence.heures</span>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
