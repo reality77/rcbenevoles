@@ -171,7 +171,7 @@ namespace web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet("Pointages/Centres/{id}/printpresencehours")]
+        [HttpGet("Centres/{id}/ImpressionPresences")]
         public async Task<IActionResult> PrintPresenceHours(int id, int period, int year)
         {
             var centre = await _context.Centres.SingleOrDefaultAsync(c => c.ID == id);
@@ -186,7 +186,7 @@ namespace web.Controllers
             int coefHours = 4;
 
             var model = new PrintCentrePresenceModel();
-            model.Presences = new List<(Benevole benevole, int nbar, int heures)>();
+            model.Presences = new List<(Benevole benevole, int nballers, int heures)>();
             model.Centre = centre;
 
             foreach(var pres in presences)

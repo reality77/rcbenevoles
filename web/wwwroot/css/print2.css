@@ -1,0 +1,245 @@
+﻿@media print 
+{
+    @page
+    { 
+        size: A4 portrait;
+        margin: 2%;
+    }
+
+    .fullpage {
+        page-break-after: always;
+    }
+
+}
+@media screen
+{
+    .fullpage {
+        float:none;
+    }
+}
+
+body
+{
+    font-size: 12pt;
+    font-family:Calibri,Arial;
+}
+
+.landscape {
+    transform: rotate(-90deg);
+}
+
+.adresse_nom {
+    font-size:16pt;
+    text-transform:uppercase;
+}
+
+.border_all {
+    border-color:black;
+    border-style: solid;
+    border-width: 1pt;
+}
+
+.border_top {
+    border-top-color:black;
+    border-top-style: solid;
+    border-top-width: 1pt;
+}
+
+.border_bottom {
+    border-bottom-color: black;
+    border-bottom-style: solid;
+    border-bottom-width: 1pt;
+}
+
+.border_left {
+    border-left-color: black;
+    border-left-style: solid;
+    border-left-width: 1pt;
+}
+
+.border_right {
+    border-right-color: black;
+    border-right-style: solid;
+    border-right-width: 1pt;
+}
+
+.border_double.btitle {
+    border-top-color:black;
+    border-top-style: double;
+    border-top-width: 3pt;
+    border-left-color:black;
+    border-left-style: double;
+    border-left-width: 3pt;
+    border-right-color:black;
+    border-right-style: double;
+    border-right-width: 3pt;
+}
+
+.border_double {
+    border-color: black;
+    border-width: 3pt;
+    border-style: double;
+}
+
+.border_double_top {
+    border-top-color: black;
+    border-top-width: 3pt;
+    border-top-style: double;
+}
+
+.border_double_left {
+    border-left-color: black;
+    border-left-width: 3pt;
+    border-left-style: double;
+}
+
+.border_double_right {
+    border-right-color: black;
+    border-right-width: 3pt;
+    border-right-style: double;
+}
+
+.border_double_bottom {
+    border-bottom-color: black;
+    border-bottom-width: 3pt;
+    border-bottom-style: double;
+}
+
+
+h1 {
+    font-size:16pt;
+    text-align:center;
+    /*border-bottom:black solid 2pt;*/
+    text-decoration: underline;
+}
+
+h2 {
+    font-size: 14pt;
+    text-align: center;
+    border-bottom: black solid 1pt;
+}
+
+
+div .right {
+    text-align:right;
+}
+
+div .clearfix {
+    float:none;
+}
+
+.formlabel {
+    text-align:right;
+    vertical-align: top;
+}
+
+.formfield {
+    font-weight: bold;
+}
+
+.frais_rubrique {
+    text-decoration: underline;
+}
+
+.frais_saisie {
+    background-color: lightgray;
+    border-left-width: 0.5pt;
+    border-left-color: gray;
+    border-left-style: solid;
+    border-right-width: 0.5pt;
+    border-right-color: gray;
+    border-right-style: solid;
+    border-bottom-width: 0.5pt;
+    border-bottom-color: gray;
+    border-bottom-style: solid;
+    text-align:right;
+}
+
+.frais_saisie > span {
+    font-weight: bold;
+}
+
+.frais_saisie.top {
+    border-top-width: 0.5pt;
+    border-top-color: gray;
+    border-top-style: solid;
+}
+
+.frais_label_right {
+    text-align: right;
+}
+
+.frais_total {
+    font-weight:bold;
+    text-align:right;
+}
+
+.declaration_renonciation {
+    font-style: italic;
+}
+
+.signature {
+    vertical-align:top;
+    padding-left:0.2cm;
+}
+
+.table_details {
+    border-style:none;
+}
+
+table.table_details {
+    border-collapse: collapse;
+}
+
+.table_details tr {
+    border: 1pt solid #aaa;
+}
+
+.table_details td {
+    width: 20pt;
+    border: 1pt solid #aaa;
+    text-align: left;
+}
+
+.table_details .double_size {
+    width: 42pt;
+}
+
+.table_details .month_name {
+    width: 60pt;
+}
+
+.table_details .total_label {
+    font-size: bold;
+}
+
+.table_separator {
+    border-right: 1pt solid #aaa;
+}
+
+td.day_in_month {
+    background-color: #eee;
+}
+
+.table_details tbody tr {
+    page-break-inside: avoid;
+}
+
+.table_details thead tr {
+    page-break-inside: avoid;
+}
+
+.header_sign_panel {
+    padding-left: 4pt;
+    padding-right: 4pt;
+}
+
+.date_name {
+    min-width: 130pt;
+    height: 18pt;
+}
+
+.signature {
+    min-width: 130pt;
+    height: 50pt;
+}
