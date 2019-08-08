@@ -1,0 +1,32 @@
+﻿@model PrintHoursPresenceIndexModel
+
+@{
+    ViewData["Title"] = "Détails";
+}
+
+<h2>Edition des fiches de présence</h2>
+
+@if(Model.Periods.Count == 0) 
+{
+<div class="alert alert-warning">
+    <p>Aucune fiche n'est disponible pour l'édition. Il est possible qu'aucune donnée ne soit disponible pour ce centre</p>
+</div>
+}
+else
+{
+<div class="alert alert-info">
+    <p>Sélectionnez la fiche que vous souhaitez éditer</p>
+</div>
+
+<div>
+    <hr />
+    <ul>
+        @foreach (var period in Model.Periods)
+        {
+            <li>
+                <a asp-action="PrintPresenceHours" asp-controller="Centres" asp-route-id="@Model.Centre.ID" asp-route-period="@period.PeriodId" asp-route-year="@period.Start.Year" target="_blank">Du <strong>@period.Start.ToString("dddd d MMMM")</strong> au <strong>@period.End.AddDays(-1).ToString("dddd d MMMM yyyy")</strong></a>
+            </li>
+        }
+    </ul>
+</div>
+}

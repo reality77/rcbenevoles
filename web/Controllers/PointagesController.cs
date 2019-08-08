@@ -241,10 +241,10 @@ namespace web.Controllers
             if (benevole == null)
                 return NotFound("Bénévole non trouvé");
 
-            var model = new PrintIndexModel
+var model = new PrintIndexModel
             {
                 Benevole = benevole,
-            };
+            };            
 
             var userCentreId = GetCurrentUser().CentreID;
 
