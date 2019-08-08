@@ -176,11 +176,22 @@ namespace web.Controllers
         {
             var centre = await _context.Centres.SingleOrDefaultAsync(c => c.ID == id);
 
+            DateTime periodStart, periodEnd;
+
+            try
+            {
+                (periodStart, periodEnd) = GetPeriodDates(period, year);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
             var presences = _context.Pointages
                 .Include(p => p.Benevole)
                 .Include(p => p.Adresse)
                 .Where(p => p.Adresse.CentreID == id)
-                // TODO DATE -- .Where(p => p.Date)
+                .Where(p => p.Date >= periodStart && p.Date < periodEnd)
                 .GroupBy(p => p.Benevole);
 
             int coefHours = 4;
