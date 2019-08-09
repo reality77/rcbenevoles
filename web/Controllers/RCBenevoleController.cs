@@ -71,5 +71,30 @@ namespace web.Controllers
                 Type = messageType,
             });
         }
+
+        protected (DateTime periodStart, DateTime periodEnd) GetPeriodDates(int period, int year)
+        {
+            DateTime periodStart, periodEnd;
+
+            switch(period)
+            {
+                case 1:
+                    {
+                        periodStart = new DateTime(year, 1, 1);
+                        periodEnd = new DateTime(year, 5, 1);
+                    }
+                    break;
+                case 2:
+                    {
+                        periodStart = new DateTime(year, 5, 1);
+                        periodEnd = new DateTime(year + 1, 1, 1);
+                    }
+                    break;
+                default:
+                    throw new Exception("Période invalide");
+            }
+
+            return (periodStart, periodEnd);
+        }
     }
 }

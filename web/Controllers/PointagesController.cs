@@ -241,10 +241,10 @@ namespace web.Controllers
             if (benevole == null)
                 return NotFound("Bénévole non trouvé");
 
-            var model = new PrintIndexModel
+var model = new PrintIndexModel
             {
                 Benevole = benevole,
-            };
+            };            
 
             var userCentreId = GetCurrentUser().CentreID;
 
@@ -364,25 +364,15 @@ namespace web.Controllers
             if (!IsCentreAllowed(adresse.Centre))
                 return Forbid();
 
-            DateTime periodStart;
-            DateTime periodEnd;
+            DateTime periodStart, periodEnd;
 
-            switch(period)
+            try
             {
-                case 1:
-                    {
-                        periodStart = new DateTime(year, 1, 1);
-                        periodEnd = new DateTime(year, 5, 1);
-                    }
-                    break;
-                case 2:
-                    {
-                        periodStart = new DateTime(year, 5, 1);
-                        periodEnd = new DateTime(year + 1, 1, 1);
-                    }
-                    break;
-                default:
-                    return BadRequest("Période invalide");
+                (periodStart, periodEnd) = GetPeriodDates(period, year);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
             var frais = _context.Frais.SingleOrDefault(f => f.Annee == year);
@@ -418,6 +408,7 @@ namespace web.Controllers
 
             return View(model);
         }
+
 
         private bool PointageExists(int id)
         {

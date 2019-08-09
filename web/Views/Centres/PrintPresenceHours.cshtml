@@ -1,0 +1,189 @@
+﻿@model PrintCentrePresenceModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/print2.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/print2.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body>
+    <div class="fullpage">
+
+        <div style="margin-top: 0.8cm">
+            <h1>
+                <span>Synthèse des heures de présences</span>
+            </h1>
+        </div>
+        <div>
+            <div>
+                <span class="formlabel">Centre :</span>
+                <span class="formfield">@Model.Centre.Nom</span>
+            </div>
+            <div>
+                <span class="formlabel">Année :</span>
+                <span class="formfield">@Model.PeriodStart.Year</strong></span>
+            </div>
+            <div>
+                <span class="formlabel">Période concernée :</span>
+                <span class="formfield">@Model.PeriodStart.ToString("dd MMMM") au @Model.PeriodEnd.ToString("dd MMMM yyyy")</span>
+            </div>
+        </div>
+
+        <div style="float:left;width:50%">
+            <div style="padding: 0.2cm">
+                <div style="margin-top: 0.8cm">
+                    <h2>
+                        <span><br/>Estimation des heures de présences</span>
+                    </h2>
+                </div>
+                <table class="table_details" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th class="table_separator" style="width:30%">Nom</th>
+                            <th class="table_separator" style="width:30%">Prénom</th>
+                            <th class="table_separator" style="width:20%">Nb de demi journées</th>
+                            <th class="table_separator" style="width:20%">Présence (heures)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var presence in Model.Presences) {
+                        <tr>
+                            <td>
+                                <span>@presence.benevole.Nom</span>
+                            </td>
+                            <td>
+                                <span>@presence.benevole.Prenom</span>
+                            </td>
+                            <td>
+                                <span>@presence.nballers</span>
+                            </td>
+                            <td>
+                                <span>@presence.heures</span>
+                            </td>
+                        </tr>
+                    }
+                        <tr>
+                            <td colspan="3">
+                                <span class="total_label">Total</span>
+                            </td>
+                            <td>
+                                <span>@(Model.Presences.Sum(p => p.heures))</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div style="float:left;width:50%">
+            <div style="padding: 0.2cm">
+                <div style="margin-top: 0.8cm">
+                    <h2>
+                        <span>Bénévoles en formation/représentation/réunion</span>
+                    </h2>
+                </div>
+                <table class="table_details" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th class="table_separator" style="width:30%">Nom</th>
+                            <th class="table_separator" style="width:30%">Prénom</th>
+                            <th class="table_separator" style="width:15%">Code</th>
+                            <th class="table_separator" style="width:25%">Présence (heures)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @for (var i = 0; i < 20; i++) {
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+        <div style="width: 100%">
+            <div style="margin-top: 0.8cm">
+                <h2>
+                    <span>Notes</span>
+                </h2>
+            </div>
+            <table class="table_details" style="width:100%">
+                <thead>
+                    <tr>
+                        <th class="table_separator" style="width:60%">Lieu</th>
+                        <th class="table_separator" style="width:10%">Code</th>
+                        <th class="table_separator" style="width:30%">Source</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Assemblée Générale</td>
+                        <td>AG</td>
+                        <td>Centre-Sécrétariat AD</td>
+                    </tr>
+                    <tr>
+                        <td>Collecte Nationale</td>
+                        <td>CN</td>
+                        <td>Centre-Sécrétariat AD</td>
+                    </tr>
+                    <tr>
+                        <td>Domicile (Travail à…)</td>
+                        <td>TD</td>
+                        <td>Bénévole</td>
+                    </tr>
+                    <tr>
+                        <td>Formation - Réunion AD68</td>
+                        <td>AD</td>
+                        <td>Secrétariat AD-Formation</td>
+                    </tr>
+                    <tr>
+                        <td>Formation - Réunion AN Paris</td>
+                        <td>AN</td>
+                        <td>Bénévole-Comptabilité</td>
+                    </tr>
+                    <tr>
+                        <td>Formation - Réunion Antenne 10</td>
+                        <td>AT</td>
+                        <td>Bénévole-Comptabilité</td>
+                    </tr>
+                    <tr>
+                        <td>Ramasse</td>
+                        <td>RA</td>
+                        <td>Entrepôt</td>
+                    </tr>
+                    <tr>
+                        <td>Représentation aux manifestations</td>
+                        <td>RM</td>
+                        <td>Bénévole</td>
+                    </tr>
+                    <tr>
+                        <td>Réunion Début de Campagne</td>
+                        <td>DC</td>
+                        <td>Centre-Secrétariat AD</td>
+                    </tr>
+                    <tr>
+                        <td>Réunion Fin de Campagne</td>
+                        <td>FC</td>
+                        <td>Centre-Secrétariat AD</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
