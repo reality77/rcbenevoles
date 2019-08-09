@@ -78,6 +78,11 @@
                                 <input id="DistanceCentre" asp-for="Adresse.DistanceCentre" class="form-control" onblur="validateDistance();" />
                                 <span id="validationDistance" class="text-danger" style="display:none"></span>
 
+                                <div class="alert alert-warning">
+                                    <p>
+                                        <span>Si le bénévole ne prend pas son véhicule ou n'a pas le droit de déclarer ses frais en dons, veuillez renseigner la valeur 0,00.</span>
+                                    </p>
+                                </div>
                                 <div class="alert alert-info">
                                     <p>
                                         <span>Prière d’utiliser <a href="http://www.mappy.fr" target="_blank"><strong>MAPPY</strong></a> afin de déterminer la distance la plus courte A/R du domicile au lieu de bénévolat.</span>

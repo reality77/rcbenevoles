@@ -109,14 +109,16 @@ body
 h1 {
     font-size:16pt;
     text-align:center;
-    border:black solid 2pt;
+    /*border-bottom:black solid 2pt;*/
+    text-decoration: underline;
 }
 
 h2 {
     font-size: 14pt;
     text-align: center;
-    border: black solid 1pt;
+    border-bottom: black solid 1pt;
 }
+
 
 div .right {
     text-align:right;
@@ -132,13 +134,6 @@ div .clearfix {
 }
 
 .formfield {
-    border-bottom-color: gray;
-    border-bottom-width: 0.5pt;
-    border-bottom-style: dotted;
-}
-
-
-.formfield > span {
     font-weight: bold;
 }
 
@@ -203,7 +198,7 @@ table.table_details {
 .table_details td {
     width: 20pt;
     border: 1pt solid #aaa;
-    text-align: center;
+    text-align: left;
 }
 
 .table_details .double_size {
@@ -212,6 +207,10 @@ table.table_details {
 
 .table_details .month_name {
     width: 60pt;
+}
+
+.table_details .total_label {
+    font-size: bold;
 }
 
 .table_separator {

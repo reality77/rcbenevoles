@@ -17,8 +17,23 @@
                 <div class="form-group">
                     <div class="col-xs-12">
                         <fieldset>
+                            @if(Model.Adresse.DistanceCentre > 0) 
+                            {
+                            <div class="alert alert-warning">
+                                <p>
+                                    <span>Chaque aller-retour sera comptabilisé comme une demi journée pour le calcul des fiches de présences</span>
+                                </p>
+                            </div>
+                            }
                             <div class="col-sm-6">
+                                @if(Model.Adresse.DistanceCentre > 0)
+                                { 
                                 <label class="control-label">Nombre d'allers-retours :</label>
+                                }
+                                else
+                                {
+                                <label class="control-label">Nombre de demi journées :</label>
+                                }
                             </div>
                             <div class="col-sm-6" style="margin-top:-10px">
                                 <input asp-for="NbDemiJournees" type="hidden" />
