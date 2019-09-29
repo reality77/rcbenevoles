@@ -14,7 +14,7 @@ L'application a été optimisée afin d'être facilement embarquable dans un env
 | Indicateur | master | develop |
 |------------|--------|---------|
 | Travis     | [![Build Status](https://travis-ci.org/reality77/rcbenevoles.svg?branch=master)](https://travis-ci.org/reality77/rcbenevoles) |  [![Build Status](https://travis-ci.org/reality77/rcbenevoles.svg?branch=develop)](https://travis-ci.org/reality77/rcbenevoles) |
-| Sonar      | [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=reality77_rcbenevoles&metric=alert_status)](https://sonarcloud.io/dashboard?id=reality77_rcbenevoles) | [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=develop&project=reality77_rcbenevoles&metric=alert_status)](https://sonarcloud.io/dashboard?id=reality77_rcbenevoles&branch=develop)
+| Sonar      | [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=reality77_rcbenevoles&metric=alert_status)](https://sonarcloud.io/dashboard?id=reality77_rcbenevoles) | [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=develop&project=reality77_rcbenevoles&metric=alert_status)](https://sonarcloud.io/dashboard?id=reality77_rcbenevoles&branch=develop) [![Greenkeeper badge](https://badges.greenkeeper.io/reality77/rcbenevoles.svg)](https://greenkeeper.io/)
 
 ## Variables d'environnement
 
