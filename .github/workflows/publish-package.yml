@@ -1,0 +1,20 @@
+name: Publish image to GitHub Package Registry
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+    steps:
+
+    - name: Login to docker
+      env:
+        TOKEN_PACKAGES: ${{ secrets.TOKEN_PACKAGES }}
+      run: echo ${TOKEN_PACKAGES} | docker login docker.pkg.github.com --username $GITHUB_ACTOR --password-stdin
+
+    - name: Copy Repo Files
+      uses: actions/checkout@master
+
+    - name: Build the Docker image
+      run: docker build -t docker.pkg.github.com/$GITHUB_REPOSITORY/rcbenevoles:$GITHUB_SHA .
+
+    - name: Publish the Docker image
+      run: docker push docker.pkg.github.com/$GITHUB_REPOSITORY/rcbenevoles:$GITHUB_SHA
