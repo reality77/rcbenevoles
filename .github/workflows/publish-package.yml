@@ -1,5 +1,8 @@
 name: Publish image to GitHub Package Registry
-on: push
+on: 
+  push:
+    tags:
+      - *
 jobs:
   build:
     runs-on: ubuntu-latest 
@@ -7,14 +10,18 @@ jobs:
 
     - name: Login to docker
       env:
-        TOKEN_PACKAGES: ${{ secrets.TOKEN_PACKAGES }}
+        TOKEN_PACKAGES: ${{ secrets.GITHUB_TOKEN }}
       run: echo ${TOKEN_PACKAGES} | docker login docker.pkg.github.com --username $GITHUB_ACTOR --password-stdin
 
     - name: Copy Repo Files
       uses: actions/checkout@master
 
     - name: Build the Docker image
-      run: docker build -t docker.pkg.github.com/$GITHUB_REPOSITORY/rcbenevoles:$GITHUB_SHA .
+      run: |
+        TAG=$(echo $GITHUB_REF | cut -c11-)
+        docker build -t docker.pkg.github.com/$GITHUB_REPOSITORY/rcbenevoles:$TAG .
 
     - name: Publish the Docker image
-      run: docker push docker.pkg.github.com/$GITHUB_REPOSITORY/rcbenevoles:$GITHUB_SHA
+      run: |
+        TAG=$(echo $GITHUB_REF | cut -c11-)
+        docker push docker.pkg.github.com/$GITHUB_REPOSITORY/rcbenevoles:$TAG
