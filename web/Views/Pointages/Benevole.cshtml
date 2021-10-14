@@ -66,7 +66,7 @@
     function displayDetailPanel() {
 
         $.ajax({
-            url: '@Url.Action("BenevoleEditOrCreate")' + '?id=@Model.Benevole.ID&date=' + encodeURIComponent($("#calendar").attr("data-selected-date")),
+            url: '@Url.Action("BenevoleEditOrCreate", new { id = Model.Benevole.ID })' + '?id=@Model.Benevole.ID&date=' + encodeURIComponent($("#calendar").attr("data-selected-date")),
             type: 'GET',
             cache: false,
             success: function (data) {
@@ -95,7 +95,7 @@
             };
 
         $.ajax({
-            url: '@Url.Action("BenevoleEditOrCreate")',
+            url: '@Url.Action("BenevoleEditOrCreate", new { id = Model.Benevole.ID })',
             data: JSON.stringify(dataRequest),
             headers:
             {

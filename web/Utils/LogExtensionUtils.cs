@@ -100,7 +100,7 @@ namespace web.Utils
 
 		private static T GetHeaderValueAs<T>(HttpContext context, string headerName)
 		{
-			StringValues values;
+			StringValues values = default(StringValues);
 
 			if (context.Request?.Headers?.TryGetValue(headerName, out values) ?? false)
 			{
