@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:5.0-alpine AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:5.0-buster-slim AS build-env
 
 # Set the working directory to /app
 WORKDIR /app
@@ -11,7 +11,7 @@ RUN dotnet restore
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/core/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/core/aspnet:5.0-buster-slim
 WORKDIR /app
 COPY --from=build-env /app/web/out .
 
