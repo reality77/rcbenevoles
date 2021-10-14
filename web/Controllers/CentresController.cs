@@ -285,6 +285,7 @@ namespace web.Controllers
                 .Include(p => p.Adresse)
                 .Where(p => p.Adresse.CentreID == id)
                 .Where(p => p.Date >= periodStart && p.Date < periodEnd)
+                .ToList()   // Fix exception
                 .GroupBy(p => p.Benevole);
 
             int coefHours = 4;

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using dal.models;
 using web.Models;
-using Newtonsoft.Json;
 using web.Utils;
 
 namespace web.Controllers
@@ -65,7 +64,7 @@ namespace web.Controllers
 
         public void SetGlobalMessage(string message, EGlobalMessageType messageType)
         {
-            TempData["__GlobalMessage"] = JsonConvert.SerializeObject(new GlobalMessage
+            TempData["__GlobalMessage"] = System.Text.Json.JsonSerializer.Serialize(new GlobalMessage
             {
                 Message = message,
                 Type = messageType,
