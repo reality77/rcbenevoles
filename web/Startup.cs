@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using web.Filters;
+using Microsoft.Extensions.Hosting;
 
 namespace web
 {
@@ -33,17 +34,17 @@ namespace web
             services.AddDbContext<dal.RCBenevoleContext>(options =>
                 options.UseNpgsql(connectionString));
 
-            services.AddMvc(options =>
+            services.AddControllersWithViews(options =>
             {
                 options.Filters.Add(new RequestLogFilter());
                 options.Filters.Add(new MaintenanceModeFilter());
                 options.EnableEndpointRouting = false; // Use the routing logic of ASP.NET Core 2.1 or earlier:
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            });
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(opt => {
                     opt.Cookie.Name = "rcbene_auth";
-                    opt.Cookie.Expiration = TimeSpan.FromHours(2);
+                    opt.ExpireTimeSpan = TimeSpan.FromHours(2);
                     opt.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
                     opt.LoginPath = "/Home";
                     opt.LogoutPath = "/Account/Logout";
@@ -51,7 +52,7 @@ namespace web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 			// Pour utilisation d'un sous-répertoire via nginx (rendre configurable pour docker par variable d'environnement)
 			var pathBase = Environment.GetEnvironmentVariable("APP_PATH_BASE");
@@ -68,6 +69,7 @@ namespace web
             }
 
             app.UseStaticFiles();
+            app.UseRouting();
 
             // Pour que l'authentification soit bien gérée depuis un reverse-proxy. A appeler avant app.UseAuthentication():
 			app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -78,14 +80,13 @@ namespace web
             app.UseRequestLocalization(BuildLocalizationOptions());
             
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
+                //endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
-
 
             // Astuce pour appeler une méthode de SeedData
             var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
