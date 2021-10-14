@@ -171,6 +171,136 @@ namespace web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet("Centres/Details/{id}/ImpressionPresencesIndex")]
+        public async Task<IActionResult> PrintPresenceHoursIndex(int id)
+        {
+            var userCentreId = GetCurrentUser().CentreID;
+            if (userCentreId != null && id != userCentreId)
+                return Forbid();
+
+            var centre = await _context.Centres.SingleOrDefaultAsync(c => c.ID == id);
+
+            var query = _context.Pointages
+                .Include(p => p.Adresse).ThenInclude(a => a.Centre)
+                .Where(p => p.Adresse.CentreID == id);
+
+            var model = new PrintHoursPresenceIndexModel()
+            {
+                Centre = centre,
+            };
+
+            if(!query.Any())
+            {
+                model.Centre = centre;
+                model.Periods = null;
+                return View(model);
+            }
+
+            var start = query.Min(p => p.Date);
+            var end = query.Max(p => p.Date);
+            
+            int startPeriodId;
+            DateTime periodStart;
+            DateTime periodEnd;
+
+            if(start == DateTime.MinValue)
+                return View(model);
+            else
+            {
+                if(start.Month >= 5)
+                {
+                    start = new DateTime(start.Year, 5, 1);
+                    startPeriodId = 2;
+                }
+                else
+                {
+                    start = new DateTime(start.Year, 1, 1);
+                    startPeriodId = 1;
+                }
+            }
+
+            for(int year = start.Year; year <= end.AddDays(-1).Year; year++)
+            {
+                for(int periodId = startPeriodId; periodId <= 2; periodId++)
+                {
+                    switch(periodId)
+                    {
+                        case 1:
+                            {
+                                periodStart = new DateTime(year, 1, 1);
+                                periodEnd = new DateTime(year, 5, 1);
+                            }
+                            break;
+                        case 2:
+                            {
+                                periodStart = new DateTime(year, 5, 1);
+                                periodEnd = new DateTime(year + 1, 1, 1);
+                            }
+                            break;
+                        default:
+                            return BadRequest("Période invalide");
+                    }
+
+                    if(periodStart >= end)
+                        break;
+
+                    var period = new PrintIndexPeriod
+                    {
+                        PeriodId = periodId,
+                        Start = periodStart,
+                        End = periodEnd,
+                    };
+
+                    model.Periods.Add(period);
+                }
+
+                startPeriodId = 1;
+            }
+
+            return View(model);
+        }
+
+        [HttpGet("Centres/Details/{id}/ImpressionPresences")]
+        public async Task<IActionResult> PrintPresenceHours(int id, int period, int year)
+        {
+            var userCentreId = GetCurrentUser().CentreID;
+            if (userCentreId != null && id != userCentreId)
+                return Forbid();
+
+            var centre = await _context.Centres.SingleOrDefaultAsync(c => c.ID == id);
+
+            DateTime periodStart, periodEnd;
+
+            try
+            {
+                (periodStart, periodEnd) = GetPeriodDates(period, year);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            var presences = _context.Pointages
+                .Include(p => p.Benevole)
+                .Include(p => p.Adresse)
+                .Where(p => p.Adresse.CentreID == id)
+                .Where(p => p.Date >= periodStart && p.Date < periodEnd)
+                .GroupBy(p => p.Benevole);
+
+            int coefHours = 4;
+
+            var model = new PrintCentrePresenceModel();
+            model.Presences = new List<(Benevole benevole, int nballers, int heures)>();
+            model.Centre = centre;
+            model.PeriodStart = periodStart;
+            model.PeriodEnd = periodEnd;
+
+            foreach(var pres in presences)
+                model.Presences.Add((pres.Key, pres.Sum(p => p.NbDemiJournees), pres.Sum(p => p.NbDemiJournees) * coefHours));
+
+            return View(model);
+        }
+
         private bool CentreExists(int id)
         {
             return _context.Centres.Any(e => e.ID == id);
