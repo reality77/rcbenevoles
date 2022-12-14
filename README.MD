@@ -20,6 +20,8 @@ L'application a été optimisée afin d'être facilement embarquable dans un env
 
 **APP_DB_SERVER** : Nom ou adresse IP du serveur de base de données
 
+**APP_DB_PORT** : [Facultatif] Port du serveur de base de données (par défaut: 5432)
+
 **APP_DB_PASSWORD** : Mot de passe de l'utilisateur rcbenevoles sur la base de données rcbenevoles
 
 **APP_ADMIN_PASSWORD** : Mot de passe de l'administrateur du site lors de la création de celui-ci
