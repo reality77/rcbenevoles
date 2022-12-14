@@ -421,6 +421,9 @@ var model = new PrintIndexModel
             if (benevole == null)
                 return NotFound("Bénévole non trouvé");
 
+            if (benevole.NbChevauxFiscauxVoiture == null)
+                return BadRequest("Le nombre de chevaux fiscaux doit être renseigné pour le bénévole");
+
             DateTime periodStart = new DateTime(year, 1, 1);
             DateTime periodEnd = periodStart.AddYears(1);
 
@@ -466,8 +469,53 @@ var model = new PrintIndexModel
                     model.FraisParAdresse.Add(addressData);
                     model.DistanceTotale += addressData.Distance;
                 }
-
             }
+
+            // Barème impots revenus 2022
+            var baremesAnnee = _context.BaremeFiscalLignes
+                .Where(bf => bf.Annee == year)
+                .AsEnumerable()
+                .GroupBy(bf => bf.NbChevaux)
+                .ToDictionary(g => g.Key, g => g.AsEnumerable());
+
+            if(baremesAnnee.Count() == 0)
+                return NotFound("Barème de l'année demandée non trouvée");
+
+            if(!baremesAnnee.TryGetValue(benevole.NbChevauxFiscauxVoiture.Value, out var baremesChevaux))
+            {
+                var minChevaux = baremesAnnee.Select(ba => ba.Key).Min();
+                var maxChevaux = baremesAnnee.Select(ba => ba.Key).Max();
+                
+                if(benevole.NbChevauxFiscauxVoiture <= minChevaux)
+                    baremesChevaux = baremesAnnee[minChevaux];
+                else if(benevole.NbChevauxFiscauxVoiture >= maxChevaux)
+                    baremesChevaux = baremesAnnee[maxChevaux];
+            }
+
+            decimal distanceAppliquee = model.DistanceTotale;
+            BaremeFiscalLigne bareme = null;
+
+            foreach(var baremeKm in baremesChevaux.OrderBy(bc => bc.LimiteKm))
+            {
+                if(model.DistanceTotale <= baremeKm.LimiteKm)
+                {
+                    bareme = baremeKm;
+                    break;
+                }
+            }
+
+            if(bareme == null)
+            {
+                // on applique la bareme limité au nombre de kilometre maximum
+                bareme = baremesChevaux.Single(b => b.LimiteKm == baremesChevaux.Select(bc => bc.LimiteKm).Max());
+                distanceAppliquee = bareme.LimiteKm;
+            }
+
+            model.FormuleBareme = $"({distanceAppliquee} * {bareme.Coef}) + {bareme.Ajout}";
+
+            LogDebug($"Bareme appliqué : {bareme.NbChevaux} ch, {bareme.LimiteKm} km => {model.FormuleBareme}");
+
+            model.FraisTotaux = distanceAppliquee * bareme.Coef + bareme.Ajout;
 
             return View(model);
         }

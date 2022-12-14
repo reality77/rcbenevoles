@@ -82,7 +82,11 @@ namespace dal
                 .WithMany()
                 .HasForeignKey(c => c.CentreID)
                 .OnDelete(DeleteBehavior.Restrict);
-        }
+        
+            // *** BAREME FISCAUX			
+            modelBuilder.Entity<BaremeFiscalLigne>()
+				.HasKey(bf => new { bf.Annee, bf.NbChevaux, bf.LimiteKm });
+		}
 
         public DbSet<Utilisateur> Utilisateurs { get; set; }
         public DbSet<Siege> Sieges { get; set; }
@@ -91,11 +95,13 @@ namespace dal
         public DbSet<Pointage> Pointages { get; set; }
         public DbSet<Frais> Frais { get; set; }
         public DbSet<Adresse> Adresse { get; set; }
+		public DbSet<BaremeFiscalLigne> BaremeFiscalLignes { get; set; }
 
         public void SeedData()
         {
             this.Database.Migrate();
 
+			// Seed utilisateurs et données 
             if(this.Utilisateurs.Count() == 0)
             {
             	var seedDevData = Environment.GetEnvironmentVariable("APP_GENERATE_DEV_DATA");

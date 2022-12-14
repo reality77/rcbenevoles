@@ -123,6 +123,14 @@
                                 <span><b>@Model.DistanceTotale.ToString("0.0")</b> km</span>
                             </td>
                         </tr>
+                        <tr>
+                            <td colspan="4" class="total_line">
+                                <b>Formule appliquée : <span class="code">@Model.FormuleBareme = </span></b>
+                            </td>
+                            <td class="total_line">
+                                <span class="code"><b>@Model.FraisTotaux.ToString("0.00 €")</b></span>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -457,7 +465,7 @@
                     <tr>
                         <th>TOTAL</th>
                         <td colspan="17"></td>
-                        <td colspan="2"><strong>@(totalByMonth.Sum(t => t.Value))</strong></td>
+                        <td colspan="2"><strong>@(totalByMonth.Sum(t => t.Value).ToString("0.# km"))</strong></td>
                     </tr>
                 </tbody>
             </table>

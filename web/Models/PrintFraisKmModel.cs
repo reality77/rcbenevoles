@@ -20,6 +20,10 @@ namespace web.Models
         public List<PrintFraisKmAddressModel> FraisParAdresse { get; set; } = new List<PrintFraisKmAddressModel>();
 
         public decimal DistanceTotale { get; set; }
+        
+        public string FormuleBareme { get; set; }
+        
+        public decimal FraisTotaux { get; set; }
 
         public string FormatPhoneNumber()
         {

@@ -252,3 +252,7 @@ td.day_in_month {
     min-width: 130pt;
     height: 50pt;
 }
+
+.code {
+    font-family: 'Courier New', Courier, monospace;
+}
