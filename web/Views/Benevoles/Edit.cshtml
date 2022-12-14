@@ -29,6 +29,14 @@
                 <span asp-validation-for="Telephone" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="NbChevauxFiscauxVoiture" class="control-label"></label>
+                <input asp-for="NbChevauxFiscauxVoiture" class="form-control" />
+                <span asp-validation-for="NbChevauxFiscauxVoiture" class="text-danger"></span>
+            </div>
+            <div class="alert alert-warning">
+                <p><b>Note importante</b> : Si le nombre de chevaux fiscaux change au cours de l'année, le calcul des frais pourra être erroné et <b>nécessitera un calcul manuel</b></p>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Modifier" class="btn btn-success" />
                 <a asp-action="Details" asp-route-id="@Model.ID" class="btn btn-link">Retourner à la fiche du bénévole</a>
             </div>

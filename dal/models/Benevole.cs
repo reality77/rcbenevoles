@@ -28,6 +28,12 @@ namespace dal.models
 
         public List<Pointage> Pointages { get; set; }
 
+        [Display(Name = "Nb chevaux fiscaux (voiture)")]
+        public int? NbChevauxFiscauxVoiture { get; set; }
+
+        [NotMapped]
+        public string NbChevauxFiscauxVoitureDisplay => NbChevauxFiscauxVoiture?.ToString() ?? "Non renseigné";
+
         [NotMapped]
         public Adresse CurrentAdresse => Adresses?.SingleOrDefault(a => a.IsCurrent);
 
