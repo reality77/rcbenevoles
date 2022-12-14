@@ -23,9 +23,9 @@ namespace web
         public static int Main(string[] args)
         {
             var loggerConfig = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .MinimumLevel.Override("Microsoft", new LoggingLevelSwitch(Serilog.Events.LogEventLevel.Warning))
-                .MinimumLevel.Override("System", new LoggingLevelSwitch(Serilog.Events.LogEventLevel.Warning))
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", new LoggingLevelSwitch(Serilog.Events.LogEventLevel.Information))
+                .MinimumLevel.Override("System", new LoggingLevelSwitch(Serilog.Events.LogEventLevel.Information))
                 .WriteTo.LiterateConsole();
 
             var fileLogPath = Environment.GetEnvironmentVariable("APP_LOG_FILE_PATH");
@@ -67,6 +67,7 @@ namespace web
                 {
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseSerilog();
+                    webBuilder.UseKestrel(k => k.ListenAnyIP(5125));
                 });
     }
 }

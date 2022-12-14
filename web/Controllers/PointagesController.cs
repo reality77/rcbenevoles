@@ -409,6 +409,68 @@ var model = new PrintIndexModel
             return View(model);
         }
 
+        [HttpGet("Pointages/Benevole/{id}/print-frais-km")]
+        public async Task<IActionResult> PrintFraisKm(int id, int year)
+        {
+            var benevole = await _context.Benevoles
+                .Include(b => b.Adresses)
+                .ThenInclude(a => a.Centre)
+                .ThenInclude(c => c.Siege)
+                .SingleOrDefaultAsync(b => b.ID == id);
+
+            if (benevole == null)
+                return NotFound("Bénévole non trouvé");
+
+            DateTime periodStart = new DateTime(year, 1, 1);
+            DateTime periodEnd = periodStart.AddYears(1);
+
+            var adresses = benevole.GetAdressesInPeriod(periodStart, periodEnd, excludeEnd: true)
+                .OrderBy(ap => ap.Key)
+                .Select(ap => ap.Value)
+                .Distinct();
+            
+            var centres = adresses.Select(a => a.Centre).Distinct();
+
+            if (GetCurrentUser().Centre != null && !centres.Contains(GetCurrentUser().Centre))
+                return Forbid();
+
+            PrintFraisKmModel model = new PrintFraisKmModel
+            {
+                PeriodStart = periodStart,
+                PeriodEnd = periodEnd.AddDays(-1),
+                Benevole = benevole,
+                MonthCount = 12,
+            };
+
+            foreach(var adresse in adresses)
+            {
+                // ***** Calcul du nombre de demi-journées pointées sur l'adresse
+                var demiJournees = _context.Pointages
+                    .Where(p => p.Adresse == adresse)
+                    .Where(p => p.Date >= periodStart && p.Date < periodEnd);
+
+                var totalDemiJournees = demiJournees.Sum(p => p.NbDemiJournees);
+
+                if(totalDemiJournees > 0)
+                {
+                    var addressData = new PrintFraisKmAddressModel
+                    {
+                        Adresse = adresse,
+                        FirstDate = demiJournees.Select(p => p.Date).Min(),
+                        LastDate = demiJournees.Select(p => p.Date).Max(),
+                        TotalDemiJournees = totalDemiJournees,
+                        Distance = totalDemiJournees * adresse.DistanceCentre,
+                        DetailDemiJournees = demiJournees.ToDictionary(p => Tuple.Create(p.Date.Month, p.Date.Day)),
+                    };
+
+                    model.FraisParAdresse.Add(addressData);
+                    model.DistanceTotale += addressData.Distance;
+                }
+
+            }
+
+            return View(model);
+        }
 
         private bool PointageExists(int id)
         {

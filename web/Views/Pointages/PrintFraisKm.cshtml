@@ -1,0 +1,513 @@
+﻿@model PrintFraisKmModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/print.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/print.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body>
+    <div class="fullpage">
+        <div>
+            <div>
+                <span class="adresse_nom">Les Restaurants du C&oelig;ur</span>
+            </div>
+
+            <div class="right">
+                <span>Année <strong>@Model.PeriodStart.Year</strong></span>
+            </div>
+
+            <div>
+                <div class="border_all" style="float:right;padding-left:4px;padding-right:4px">
+                    <span>Période concernée : </span>
+                    <span>@Model.PeriodStart.ToString("dd MMMM") au @Model.PeriodEnd.ToString("dd MMMM yyyy")</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 0.8cm">
+            <h1>
+                <span>Fiche de déclaration des frais kilométriques</span>
+                <br/>
+                <span>Domicile / Lieu de bénévolat</span>
+            </h1>
+        </div>
+
+        <div style="margin-top: 0.3cm" >
+            <div class="border_double" style="padding:0.2cm">
+                <table style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="width:25%"></th>
+                            <th style="width:75%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="formlabel">
+                                <span>NOM :</span>
+                            </td>
+                            <td class="formfield">
+                                <span>@Model.Benevole.Nom</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="formlabel">
+                                <span>Prénom :</span>
+                            </td>
+                            <td class="formfield">
+                                <span>@Model.Benevole.Prenom</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div style="margin-top: 0.3cm" >
+            <div style="text-align:center">
+                <span class="border_double btitle" style="padding-left:0.1cm;padding-top:0.1cm;padding-right:0.1cm">
+                    <strong>Détail des frais</strong>
+                </span>
+            </div>
+            <div class="border_double" style="padding:0.2cm">
+                <table style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="width:25%">Adresse</th>
+                            <th style="width:25%">Centre de bénévolat</th>
+                            <th style="width:15%">Nb d'allers/retours</th>
+                            <th style="width:15%">Distance du centre</th>
+                            <th style="width:20%">Distance totale</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var fraisParAdresse in Model.FraisParAdresse)
+                        {
+                            <tr>
+                                <td>
+                                    <span>@Html.Raw(fraisParAdresse.Adresse.GetAdresseComplete(true))</span>
+                                </td>
+                                <td>
+                                    <span><b>@fraisParAdresse.Adresse.Centre.Nom</b></span>
+                                    <br/>
+                                    <span>@fraisParAdresse.Adresse.Centre.Adresse</span>
+                                </td>
+                                <td class="frais_label_right">
+                                    <span><b>@fraisParAdresse.TotalDemiJournees</b> A/R</span>
+                                </td>
+                                <td class="frais_label_right">
+                                    <span><b>@fraisParAdresse.Adresse.DistanceCentre.ToString("0.0")</b> km</span>
+                                </td>
+                                <td class="frais_label_right">
+                                    <span><b>@fraisParAdresse.Distance.ToString("0.0")</b> km</span>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="4" class="total_line">
+                                <b>TOTAL</b>
+                            </td>
+                            <td class="total_line">
+                                <span><b>@Model.DistanceTotale.ToString("0.0")</b> km</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div style="margin-top: 0.3cm" >
+            <div class="border_double" style="padding:0.2cm">
+                <table style="width:100%">
+                    <tr>
+                        <td>
+                            <span class="declaration_renonciation">Déclaration de Renonciation au remboursement des frais engagés (rédaction manuscrite par le Bénévole **)</span>
+                        </td>
+                    </tr>
+                    <tr style="height:18pt">
+                        <td class="formfield">
+                            <span></span>
+                        </td>
+                    </tr>
+                    <tr style="height:18pt">
+                        <td class="formfield">
+                            <span></span>
+                        </td>
+                    </tr>
+                    <tr style="height:18pt">
+                        <td class="formfield">
+                            <span></span>
+                        </td>
+                    </tr>
+                    <tr style="height:18pt">
+                        <td class="formfield">
+                            <span></span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <div>
+                <table style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="width:33%"></th>
+                            <th style="width:33%"></th>
+                            <th style="width:33%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border_double">
+                                <div class="signature" style="height:3cm">
+                                    <span>Signature du Bénévole</span>
+                                </div>
+                            </td>
+                            <td class="border_double">
+                                <div class="signature" style="height:3cm">
+                                    <span>Signature du Président</span>
+                                </div>
+                            </td>
+                            <td class="border_double">
+                                <div class="signature" style="height:3cm">
+                                    <span>Signature du Trésorier</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border_all" style="border-width:2pt">
+                                <div class="signature" style="height:2cm">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td style="text-align:center">
+                                                <div class="border_bottom" style="border-width:2pt">
+                                                    <strong>Reçu fiscal</strong>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Numéro :</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Date :</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <footer style="margin-top:1cm">
+            ** Je soussigné .... (nom et prénom) demeurant à .... (adresse complète), certifie renoncer expressément au remboursement des frais ci-dessus et les laisser à l'Association en tant que don
+        </footer>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="fullpage">
+        <div style="display:inline-block;width:100%">
+            <div style="float:left">
+                <span class="adresse_nom">Les Restaurants du C&oelig;ur</span>
+            </div>
+            <div style="float:right">
+                <span>Année : <strong>@Model.PeriodStart.Year</strong></span>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div style="display:inline-block;width:100%">
+            <div style="float:left">
+                <span class="adresse_rue">@Model.Benevole.CurrentAdresse.Centre.Siege.Adresse</span>
+            </div>
+            <div style="float:right">
+                <span>Durée : <strong>@Model.MonthCount mois</strong></span>
+            </div>
+        </div>
+        <div style="display:inline-block;width:100%">
+            <div style="float:right">
+                <span>Période : </span>
+                <span><strong>@Model.PeriodStart.ToString("dd MMMM")</strong> au <strong>@Model.PeriodEnd.ToString("dd MMMM yyyy")</strong></span>
+            </div>
+        </div>
+        <div style="display:inline-block;width:100%">
+            <div style="float:left">
+                <span><em>Nom : </em> <strong>@Model.Benevole.Nom</strong></span>
+                <span><strong>@Model.Benevole.Prenom</strong></span>
+            </div>
+        </div>
+        <div style="display:inline-block;width:100%">
+            <div style="float:left">
+                <span><em>Adresse : </em> <strong>@Model.Benevole.CurrentAdresse.AdresseLigne1 @Model.Benevole.CurrentAdresse.AdresseLigne2 @Model.Benevole.CurrentAdresse.AdresseLigne3</strong></span>
+                <span><strong>@Model.Benevole.CurrentAdresse.CodePostal</strong></span>
+                <span><strong>@Model.Benevole.CurrentAdresse.Ville</strong></span>
+            </div>
+        </div>
+        <div style="display:inline-block;width:100%">
+            <div style="float:left">
+                <span><em>Téléphone : </em> <strong>@Model.FormatPhoneNumber()</strong></span>
+            </div>
+        </div>
+        <div style="display:inline-block;width:100%;margin-top:5mm">
+            <div style="float:left">
+                <span><em>Lieux de bénévolat : </em>
+            </div>
+            <div style="float:left">
+                <ol>
+                    @foreach(var centre in Model.FraisParAdresse.Select(f => f.Adresse.Centre).Distinct())
+                    {
+                        <li style="list-style-type: decimal;">
+                            <span><strong>@centre.Nom</strong> - </span>
+                            <span>@centre.Adresse</span>
+                        </li>
+                    }
+                </ol>
+            </div>
+        </div>
+
+        @{ var totalByMonth = new Dictionary<int, decimal>(); }
+        
+        <div style="display:block;margin-top:2mm">
+            <table class="table_details">
+                <thead>
+                    <tr>
+                        <th class="table_separator"></th>
+                        <th colspan="7" class="table_separator">1ère semaine</th>
+                        <th colspan="7" class="table_separator">2ème semaine</th>
+                        <th colspan="7" class="table_separator">3ème semaine</th>
+                    </tr>
+                    <tr>
+                        <th class="table_separator"></th>
+                        @for (int i = 0; i < 3; i++)
+                        {
+                        <th>Lu</th>
+                        <th>Ma</th>
+                        <th>Me</th>
+                        <th>Je</th>
+                        <th>Ve</th>
+                        <th>Sa</th>
+                        <th class="table_separator">Di</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @for (var month = 1; month <= 12; month++)
+                    {
+                        <tr>
+                            <th class="month_name">@(new DateTime(Model.PeriodStart.Year, month, 1).ToString("MMMM"))</th>
+
+                            @{
+                            var firstDate = new DateTime(Model.PeriodStart.Year, month, 1);
+                            var firstDayOfWeek = (firstDate.DayOfWeek == DayOfWeek.Sunday) ? 7 : (int)firstDate.DayOfWeek;
+                            var firstDateMonday = firstDate.AddDays(1 - firstDayOfWeek);
+                            }
+
+                            @for (var dayIndex = 0; dayIndex < 21; dayIndex++)
+                            {
+                                var selectedDate = firstDateMonday.AddDays(dayIndex);
+                                string tdclass = "";
+                                string tdValue = "";
+
+                                if (selectedDate.Month == month)
+                                {
+                                    tdclass = "day_in_month";
+
+                                    decimal? value = null;
+                                    dal.models.Pointage pt;
+                                    foreach(var fraisParAdresse in Model.FraisParAdresse)
+                                    {
+                                        if(fraisParAdresse.DetailDemiJournees.TryGetValue(Tuple.Create(selectedDate.Month, selectedDate.Day), out pt))
+                                        {
+                                            if(value == null)
+                                                value = 0m;
+
+                                            value += pt.NbDemiJournees * pt.Adresse.DistanceCentre;
+                                        }
+                                    }
+
+                                    if(value != null)
+                                    {
+                                        tdValue = value.ToString();
+                                        
+                                        if (!totalByMonth.ContainsKey(selectedDate.Month))
+                                        {
+                                            totalByMonth[selectedDate.Month] = value.Value;
+                                        }
+                                        else
+                                        {
+                                            totalByMonth[selectedDate.Month] += value.Value;
+                                        }
+                                    }
+                                }
+
+                            <td class="@tdclass">@tdValue</td>
+                        }
+                        </tr>
+                }
+                </tbody>
+            </table>
+            <table class="table_details" style="margin-top:2mm">
+                <thead>
+                    <tr>
+                        <th class="table_separator"></th>
+                        <th colspan="7" class="table_separator">4ème semaine</th>
+                        <th colspan="7" class="table_separator">5ème semaine</th>
+                        <th colspan="3" class="table_separator">6ème semaine</th>
+                        <th colspan="4"></th>
+                    </tr>
+                    <tr>
+                        <th class="table_separator"></th>
+                    @for (int i = 0; i < 3; i++)
+                    {
+                        <th>Lu</th>
+                        <th>Ma</th>
+                        @if(i < 2)
+                        {
+                        <th>Me</th>
+                        <th>Je</th>
+                        <th>Ve</th>
+                        <th>Sa</th>
+                        <th class="table_separator">Di</th>
+                        }
+                        else
+                        {
+                        <th class="table_separator">Me</th>
+                        <th colspan="4" class="quad_size">Dist. totale</th>
+                        }
+                    }
+                    </tr>
+                </thead>
+                <tbody>
+                @for (var month = 1; month <= 12; month++)
+                {
+                    <tr>
+                        <th class="month_name">@(new DateTime(Model.PeriodStart.Year, month, 1).ToString("MMMM"))</th>
+
+                        @{
+                        var firstDate = new DateTime(Model.PeriodStart.Year, month, 1);
+                        var firstDayOfWeek = (firstDate.DayOfWeek == DayOfWeek.Sunday) ? 7 : (int)firstDate.DayOfWeek;
+                        var firstDateMonday = firstDate.AddDays(1 - firstDayOfWeek);
+                        }
+
+                        @for (var dayIndex = 21; dayIndex < 38; dayIndex++)
+                        {
+                            var selectedDate = firstDateMonday.AddDays(dayIndex);
+                            string tdclass = "";
+                            string tdValue = "";
+
+                            if(dayIndex % 7 == 0)
+                            {
+                                tdclass += " table_separator";
+                            }
+
+                            if (selectedDate.Month == month)
+                            {
+                                tdclass += " day_in_month";
+
+                                decimal? value = null;
+                                dal.models.Pointage pt;
+
+                                foreach(var fraisParAdresse in Model.FraisParAdresse)
+                                {
+                                    if(fraisParAdresse.DetailDemiJournees.TryGetValue(Tuple.Create(selectedDate.Month, selectedDate.Day), out pt))
+                                    {
+                                        if(value == null)
+                                            value = 0m;
+
+                                        value += pt.NbDemiJournees * pt.Adresse.DistanceCentre;
+                                    }
+                                }
+
+                                if(value != null)
+                                {
+                                    tdValue = value.ToString();
+                                    
+                                    if (!totalByMonth.ContainsKey(selectedDate.Month))
+                                    {
+                                        totalByMonth[selectedDate.Month] = value.Value;
+                                    }
+                                    else
+                                    {
+                                        totalByMonth[selectedDate.Month] += value.Value;
+                                    }
+                                }
+                            }
+
+                        <td class="@tdclass">@tdValue</td>
+                        }
+
+                        <td class="table_separator" colspan="2"><strong>@(totalByMonth.ContainsKey(month) ? totalByMonth[month].ToString("0.# km") : "")</strong></td>
+                    </tr>
+                }
+                    <tr>
+                        <th>TOTAL</th>
+                        <td colspan="17"></td>
+                        <td colspan="2"><strong>@(totalByMonth.Sum(t => t.Value))</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="float:left;margin-top:3mm;margin-left:1.5cm">
+                <table class="table_details">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Le bénévole</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="header_sign_panel">Date</th>
+                            <td class="date_name"></td>
+                        </tr>
+                        <tr>
+                            <th class="header_sign_panel">Nom</th>
+                            <td class="date_name"></td>
+                        </tr>
+                        <tr>
+                            <th class="header_sign_panel">Signature</th>
+                            <td class="signature"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="float:right;margin-top:3mm;margin-right:1.5cm">
+                <table class="table_details">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Le responsable</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="header_sign_panel">Date</th>
+                            <td class="date_name"></td>
+                        </tr>
+                        <tr>
+                            <th class="header_sign_panel">Nom</th>
+                            <td class="date_name"></td>
+                        </tr>
+                        <tr>
+                            <th class="header_sign_panel">Signature</th>
+                            <td class="signature"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
