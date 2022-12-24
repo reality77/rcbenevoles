@@ -188,6 +188,14 @@ div .clearfix {
     padding-left:0.2cm;
 }
 
+.total_line {
+    padding-top: 4pt;
+    border-top-width: 0.5pt;
+    border-top-color: gray;
+    border-top-style: solid;
+    text-align: right;
+}
+
 .table_details {
     border-style:none;
 }
@@ -206,8 +214,8 @@ table.table_details {
     text-align: center;
 }
 
-.table_details .double_size {
-    width: 42pt;
+.table_details .quad_size {
+    width: 88pt;
 }
 
 .table_details .month_name {
@@ -243,4 +251,8 @@ td.day_in_month {
 .signature {
     min-width: 130pt;
     height: 50pt;
+}
+
+.code {
+    font-family: 'Courier New', Courier, monospace;
 }

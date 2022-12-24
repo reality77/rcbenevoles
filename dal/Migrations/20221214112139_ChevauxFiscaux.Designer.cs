@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using dal;
@@ -9,9 +10,10 @@ using dal;
 namespace dal.Migrations
 {
     [DbContext(typeof(RCBenevoleContext))]
-    partial class RCBenevoleContextModelSnapshot : ModelSnapshot
+    [Migration("20221214112139_ChevauxFiscaux")]
+    partial class ChevauxFiscaux
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,28 +69,6 @@ namespace dal.Migrations
                         .IsUnique();
 
                     b.ToTable("Adresse");
-                });
-
-            modelBuilder.Entity("dal.models.BaremeFiscalLigne", b =>
-                {
-                    b.Property<int>("Annee")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("NbChevaux")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("LimiteKm")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("Ajout")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("Coef")
-                        .HasColumnType("numeric");
-
-                    b.HasKey("Annee", "NbChevaux", "LimiteKm");
-
-                    b.ToTable("BaremeFiscalLignes");
                 });
 
             modelBuilder.Entity("dal.models.Benevole", b =>

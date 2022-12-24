@@ -75,6 +75,7 @@ namespace web.Controllers
                 BenevoleNom = b.Nom,
                 BenevolePrenom = b.Prenom,
                 BenevoleCentre = b.Adresses.SingleOrDefault(a => a.IsCurrent).Centre.Nom,
+                ChevauxFiscauxNonRenseignes = (b.NbChevauxFiscauxVoiture == null),
                 ShowAddressWarning = b.Adresses.Any(a => a.CentreID == filter.CentreID && a.IsCurrent)
             }).AsEnumerable();
 
@@ -186,7 +187,7 @@ namespace web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Nom,Prenom,Telephone,CentreID")] Benevole benevole)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Nom,Prenom,Telephone,NbChevauxFiscauxVoiture,CentreID")] Benevole benevole)
         {
             if (id != benevole.ID)
                 return NotFound("Les identifiants ne correspondent pas");
@@ -221,6 +222,7 @@ namespace web.Controllers
                 existing.Nom = benevole.Nom;
                 existing.Prenom = benevole.Prenom;
                 existing.Telephone = benevole.Telephone;
+                existing.NbChevauxFiscauxVoiture = benevole.NbChevauxFiscauxVoiture;
                 
                 _context.Update(existing);
                             

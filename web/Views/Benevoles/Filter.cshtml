@@ -12,6 +12,10 @@
             {
                 <i class="glyphicon glyphicon-warning-sign yellow" title="Le bénévole n'est plus lié à votre centre. Vous ne pourrez qu'effectuer les pointages et éditer des fiches sur les périodes où le bénévole était lié à votre centre"></i>
             }
+            @if(item.ChevauxFiscauxNonRenseignes)
+            {
+                <i class="glyphicon glyphicon-warning-sign blue" title="Veuillez renseigner le nombre de chevaux fiscaux du véhicule du bénévole afin de pouvoir calculer les frais via le barème des impôts"></i>
+            }
             <span>@Html.DisplayFor(modelItem => item.BenevoleNom)</span>&nbsp;
         </td>
         <td>

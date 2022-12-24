@@ -109,6 +109,10 @@
     color: #d1b951;
 }
 
+.blue {
+    color: cornflowerblue;
+}
+
 .required:after {
     content: "*";
     font-weight: bold;
