@@ -35,7 +35,7 @@ namespace web.Controllers
             var benevole = await _context.Benevoles.Include(b => b.Adresses).ThenInclude(a => a.Centre)
                 .SingleOrDefaultAsync(b => b.ID == id);
 
-            if(benevole == null)
+            if (benevole == null)
                 return NotFound();
 
             var centreGere = GetCurrentUser().Centre;
@@ -77,7 +77,7 @@ namespace web.Controllers
 
             DateTime? nextChangeAddressDate = null;
 
-            if(addressIndex + 1 < adresses.Count)
+            if (addressIndex + 1 < adresses.Count)
                 nextChangeAddressDate = adresses[addressIndex + 1].DateChangement;
 
             for (int r = 0; r < PointagesBenevoleModel.CALENDAR_ROW_COUNT; r++)
@@ -106,7 +106,7 @@ namespace web.Controllers
                         Distance = adresses[addressIndex].DistanceCentre,
                     };
 
-                    if(centreGere != null && adresses[addressIndex].CentreID != centreGere.ID)
+                    if (centreGere != null && adresses[addressIndex].CentreID != centreGere.ID)
                         item.DisabledByCenter = true;
 
                     row.Items.Add(item);
@@ -163,7 +163,7 @@ namespace web.Controllers
 
         [HttpPost("Pointages/Benevole/{id}/editcreate")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> BenevoleEditOrCreate(int id, [FromBody] [Bind("BenevoleID,Date,NbDemiJournees")] Pointage pointage)
+        public async Task<IActionResult> BenevoleEditOrCreate(int id, [FromBody][Bind("BenevoleID,Date,NbDemiJournees")] Pointage pointage)
         {
             if (id != pointage.BenevoleID)
                 return BadRequest("id does not match BenevoleId");
@@ -207,7 +207,7 @@ namespace web.Controllers
 
                     await _context.SaveChangesAsync();
 
-                    if(created)
+                    if (created)
                         LogInfo("Pointage créé au {DatePointage:dd/MM/yyyy} pour le benevole #{BenevoleID} sur l'adresse {AdresseID}", pointage.Date, pointage.BenevoleID, pointage.AdresseID);
                     else
                         LogInfo("Pointage modifié au {DatePointage:dd/MM/yyyy} pour le benevole #{BenevoleID} sur l'adresse {AdresseID}", pointage.Date, pointage.BenevoleID, pointage.AdresseID);
@@ -241,10 +241,10 @@ namespace web.Controllers
             if (benevole == null)
                 return NotFound("Bénévole non trouvé");
 
-var model = new PrintIndexModel
+            var model = new PrintIndexModel
             {
                 Benevole = benevole,
-            };            
+            };
 
             var userCentreId = GetCurrentUser().CentreID;
 
@@ -260,13 +260,13 @@ var model = new PrintIndexModel
                 .OrderBy(p => p.Date)
                 .Select(p => p.Date);
 
-            var start = dates.FirstOrDefault(); 
+            var start = dates.FirstOrDefault();
 
-            if(start == DateTime.MinValue)
+            if (start == DateTime.MinValue)
                 return View(model);
             else
             {
-                if(start.Month >= 5)
+                if (start.Month >= 5)
                 {
                     start = new DateTime(start.Year, 5, 1);
                     startPeriodId = 2;
@@ -290,54 +290,68 @@ var model = new PrintIndexModel
             DateTime periodStart;
             DateTime periodEnd;
 
-            for(int year = start.Year; year <= end.AddDays(-1).Year; year++)
+            for (int year = start.Year; year <= end.AddDays(-1).Year; year++)
             {
-                for(int periodId = startPeriodId; periodId <= 2; periodId++)
+                if (year >= 2022)
                 {
-                    switch(periodId)
-                    {
-                        case 1:
-                            {
-                                periodStart = new DateTime(year, 1, 1);
-                                periodEnd = new DateTime(year, 5, 1);
-                            }
-                            break;
-                        case 2:
-                            {
-                                periodStart = new DateTime(year, 5, 1);
-                                periodEnd = new DateTime(year + 1, 1, 1);
-                            }
-                            break;
-                        default:
-                            return BadRequest("Période invalide");
-                    }
-
-                    if(periodStart >= end)
-                        break;
-
-                    var adressesWithDates = benevole.GetAdressesInPeriod(periodStart, periodEnd, excludeEnd:true);
-
                     var period = new PrintIndexPeriod
                     {
-                        PeriodId = periodId,
-                        Start = periodStart,
-                        End = periodEnd,
+                        PeriodId = -1,
+                        Start = new DateTime(year, 1, 1),
+                        End = new DateTime(year + 1, 1, 1),
                     };
 
-                    foreach (var adrDate in adressesWithDates.Keys.OrderBy(k => k))
-                    {
-                        var adr = adressesWithDates[adrDate];
-
-                        if(GetCurrentUser().CentreID == null || adr.CentreID == GetCurrentUser().CentreID)
-                            period.Adresses.Add(adr);
-
-                    }
-
-                    if(period.Adresses.Count() > 0)
-                        model.Periods.Add(period);
+                    model.Periods.Add(period);
                 }
+                else
+                {
 
-                startPeriodId = 1;
+                    for (int periodId = startPeriodId; periodId <= 2; periodId++)
+                    {
+                        switch (periodId)
+                        {
+                            case 1:
+                                {
+                                    periodStart = new DateTime(year, 1, 1);
+                                    periodEnd = new DateTime(year, 5, 1);
+                                }
+                                break;
+                            case 2:
+                                {
+                                    periodStart = new DateTime(year, 5, 1);
+                                    periodEnd = new DateTime(year + 1, 1, 1);
+                                }
+                                break;
+                            default:
+                                return BadRequest("Période invalide");
+                        }
+
+                        if (periodStart >= end)
+                            break;
+
+                        var adressesWithDates = benevole.GetAdressesInPeriod(periodStart, periodEnd, excludeEnd: true);
+
+                        var period = new PrintIndexPeriod
+                        {
+                            PeriodId = periodId,
+                            Start = periodStart,
+                            End = periodEnd,
+                        };
+
+                        foreach (var adrDate in adressesWithDates.Keys.OrderBy(k => k))
+                        {
+                            var adr = adressesWithDates[adrDate];
+
+                            if (GetCurrentUser().CentreID == null || adr.CentreID == GetCurrentUser().CentreID)
+                                period.Adresses.Add(adr);
+
+                        }
+
+                        if (period.Adresses.Count() > 0)
+                            model.Periods.Add(period);
+                    }
+                    startPeriodId = 1;
+                }
             }
 
             return View(model);
@@ -358,7 +372,7 @@ var model = new PrintIndexModel
             var adresse = benevole.Adresses
                 .SingleOrDefault(a => a.ID == addressId);
 
-            if(adresse == null)
+            if (adresse == null)
                 return NotFound("Adresse non trouvée");
 
             if (!IsCentreAllowed(adresse.Centre))
@@ -370,14 +384,14 @@ var model = new PrintIndexModel
             {
                 (periodStart, periodEnd) = GetPeriodDates(period, year);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
 
             var frais = _context.Frais.SingleOrDefault(f => f.Annee == year);
 
-            if(frais == null)
+            if (frais == null)
                 return NotFound("Frais non trouvé");
 
             // ***** Calcul du nombre de demi-journées pointées sur l'adresse
@@ -389,7 +403,7 @@ var model = new PrintIndexModel
 
             int monthCount;
 
-            if(periodStart.Year == periodEnd.Year)
+            if (periodStart.Year == periodEnd.Year)
                 monthCount = periodEnd.Month - periodStart.Month;
             else
                 monthCount = periodEnd.Month + 12 - periodStart.Month;
@@ -431,7 +445,7 @@ var model = new PrintIndexModel
                 .OrderBy(ap => ap.Key)
                 .Select(ap => ap.Value)
                 .Distinct();
-            
+
             var centres = adresses.Select(a => a.Centre).Distinct();
 
             if (GetCurrentUser().Centre != null && !centres.Contains(GetCurrentUser().Centre))
@@ -445,7 +459,7 @@ var model = new PrintIndexModel
                 MonthCount = 12,
             };
 
-            foreach(var adresse in adresses)
+            foreach (var adresse in adresses)
             {
                 // ***** Calcul du nombre de demi-journées pointées sur l'adresse
                 var demiJournees = _context.Pointages
@@ -454,7 +468,7 @@ var model = new PrintIndexModel
 
                 var totalDemiJournees = demiJournees.Sum(p => p.NbDemiJournees);
 
-                if(totalDemiJournees > 0)
+                if (totalDemiJournees > 0)
                 {
                     var addressData = new PrintFraisKmAddressModel
                     {
@@ -478,33 +492,33 @@ var model = new PrintIndexModel
                 .GroupBy(bf => bf.NbChevaux)
                 .ToDictionary(g => g.Key, g => g.AsEnumerable());
 
-            if(baremesAnnee.Count() == 0)
+            if (baremesAnnee.Count() == 0)
                 return NotFound("Barème de l'année demandée non trouvée");
 
-            if(!baremesAnnee.TryGetValue(benevole.NbChevauxFiscauxVoiture.Value, out var baremesChevaux))
+            if (!baremesAnnee.TryGetValue(benevole.NbChevauxFiscauxVoiture.Value, out var baremesChevaux))
             {
                 var minChevaux = baremesAnnee.Select(ba => ba.Key).Min();
                 var maxChevaux = baremesAnnee.Select(ba => ba.Key).Max();
-                
-                if(benevole.NbChevauxFiscauxVoiture <= minChevaux)
+
+                if (benevole.NbChevauxFiscauxVoiture <= minChevaux)
                     baremesChevaux = baremesAnnee[minChevaux];
-                else if(benevole.NbChevauxFiscauxVoiture >= maxChevaux)
+                else if (benevole.NbChevauxFiscauxVoiture >= maxChevaux)
                     baremesChevaux = baremesAnnee[maxChevaux];
             }
 
             decimal distanceAppliquee = model.DistanceTotale;
             BaremeFiscalLigne bareme = null;
 
-            foreach(var baremeKm in baremesChevaux.OrderBy(bc => bc.LimiteKm))
+            foreach (var baremeKm in baremesChevaux.OrderBy(bc => bc.LimiteKm))
             {
-                if(model.DistanceTotale <= baremeKm.LimiteKm)
+                if (model.DistanceTotale <= baremeKm.LimiteKm)
                 {
                     bareme = baremeKm;
                     break;
                 }
             }
 
-            if(bareme == null)
+            if (bareme == null)
             {
                 // on applique la bareme limité au nombre de kilometre maximum
                 bareme = baremesChevaux.Single(b => b.LimiteKm == baremesChevaux.Select(bc => bc.LimiteKm).Max());
@@ -535,7 +549,7 @@ var model = new PrintIndexModel
             await _context.SaveChangesAsync();
 
             LogInfo("Pointage supprimé au {DatePointage:dd/MM/yyyy} pour le benevole #{BenevoleID} sur l'adresse {AdresseID}", pointage.Date, pointage.BenevoleID, pointage.AdresseID);
-            
+
             return Ok();
         }
     }
